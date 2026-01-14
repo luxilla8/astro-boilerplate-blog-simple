@@ -1,0 +1,128 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogCard from '../../../components/BlogCard.astro';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const tags = await getCollection('tags');
+
+  return tags.map((tag) => ({
+    params: { tag: tag.id },
+    props: { tag },
+  }));
+}
+
+const { tag } = Astro.props;
+
+// Get all posts with this tag
+const allPosts = await getCollection('blog');
+const taggedPosts = allPosts
+  .filter((post) => !post.data.draft && post.data.tags?.includes(tag.id))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Get categories for display
+const categories = await getCollection('categories');
+const categoryMap = new Map(categories.map((cat) => [cat.id, cat.data]));
+
+// Get all tags for navigation with counts
+const allTags = await getCollection('tags');
+const tagCounts = new Map<string, number>();
+allPosts
+  .filter((post) => !post.data.draft)
+  .forEach((post) => {
+    post.data.tags?.forEach((tagId) => {
+      const count = tagCounts.get(tagId) || 0;
+      tagCounts.set(tagId, count + 1);
+    });
+  });
+---
+
+<BaseLayout
+  title={`Posts tagged "${tag.data.name}"`}
+  description={tag.data.description || `Browse all posts tagged with ${tag.data.name}.`}
+>
+  <!-- Header -->
+  <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20 md:py-28">
+    <div class="max-w-6xl mx-auto px-6 md:px-8">
+      <nav class="mb-6" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 text-sm text-gray-400">
+          <li><a href="/blog" class="hover:text-white transition-colors">Blog</a></li>
+          <li>/</li>
+          <li class="text-gray-300">Tag</li>
+        </ol>
+      </nav>
+      <h1 class="text-4xl md:text-5xl font-bold mb-5">
+        <span class="text-gray-500">#</span>{tag.data.name}
+      </h1>
+      {tag.data.description && (
+        <p class="text-xl text-gray-300 max-w-2xl leading-relaxed">
+          {tag.data.description}
+        </p>
+      )}
+    </div>
+  </div>
+
+  <!-- Tags Filter -->
+  <div class="border-b border-gray-200 bg-white sticky top-16 z-40">
+    <div class="max-w-6xl mx-auto px-6 md:px-8">
+      <nav class="flex gap-2 py-4 overflow-x-auto" aria-label="Filter by tag">
+        <a
+          href="/blog"
+          class="flex-shrink-0 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+        >
+          All Posts
+        </a>
+        {allTags.map((t) => (
+          <a
+            href={`/blog/tag/${t.id}`}
+            class:list={[
+              'flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-colors',
+              t.id === tag.id
+                ? 'bg-primary-600 text-white'
+                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
+            ]}
+          >
+            <span class={t.id === tag.id ? 'text-primary-200' : 'text-gray-400'}>#</span>
+            {t.data.name}
+            <span class:list={[
+              'ml-1.5 text-xs',
+              t.id === tag.id
+                ? 'px-1.5 py-0.5 bg-white/20 rounded-full'
+                : 'text-gray-400',
+            ]}>
+              {tagCounts.get(t.id) || 0}
+            </span>
+          </a>
+        ))}
+      </nav>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-6 md:px-8 py-16 md:py-20">
+    <!-- Posts Grid -->
+    {taggedPosts.length > 0 ? (
+      <div class="grid gap-8 md:gap-10 md:grid-cols-2 lg:grid-cols-3">
+        {taggedPosts.map((post) => (
+          <BlogCard
+            post={post}
+            categoryData={categoryMap.get(post.data.category)}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-20 bg-gray-50 rounded-2xl">
+        <p class="text-gray-600 mb-4">
+          No posts with this tag yet.
+        </p>
+        <a
+          href="/blog"
+          class="inline-flex items-center text-primary-600 font-medium hover:underline"
+        >
+          View all posts
+        </a>
+      </div>
+    )}
+  </div>
+</BaseLayout>

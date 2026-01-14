@@ -1,0 +1,169 @@
+---
+title: SEO for Developers - A Complete Guide
+description: Everything developers need to know about SEO, from meta tags to structured data, Core Web Vitals, and making your site discoverable by AI systems.
+pubDate: 2024-01-08
+category: tutorials
+tags:
+  - seo
+  - javascript
+draft: false
+---
+
+SEO isn't just for marketers. As developers, we control the technical foundations that determine whether a site can rank well. Here's everything you need to know.
+
+## The Technical Foundations
+
+Before we dive into tactics, understand this: Google (and other search engines) are essentially trying to understand what your page is about and whether it's trustworthy. Everything we do is in service of making that easier.
+
+### 1. Semantic HTML
+
+This is the foundation. Use the right elements:
+
+```html
+<article>
+  <header>
+    <h1>Your Page Title</h1>
+    <time datetime="2024-01-08">January 8, 2024</time>
+  </header>
+
+  <section>
+    <h2>First Section</h2>
+    <p>Content goes here...</p>
+  </section>
+</article>
+```
+
+Key elements to use correctly:
+- `<article>` for standalone content
+- `<nav>` for navigation
+- `<main>` for primary content
+- `<aside>` for sidebars
+- `<header>` and `<footer>` for their obvious purposes
+
+### 2. Meta Tags That Matter
+
+Not all meta tags are created equal. Focus on these:
+
+```html
+<!-- Essential -->
+<title>Page Title | Site Name</title>
+<meta name="description" content="150-160 character description">
+<link rel="canonical" href="https://yoursite.com/page">
+
+<!-- Open Graph (for social sharing) -->
+<meta property="og:title" content="Page Title">
+<meta property="og:description" content="Description">
+<meta property="og:image" content="https://yoursite.com/image.jpg">
+<meta property="og:type" content="article">
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image">
+```
+
+### 3. Structured Data (JSON-LD)
+
+This is where you can really stand out. Structured data helps search engines understand your content:
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Your Article Title",
+  "datePublished": "2024-01-08",
+  "author": {
+    "@type": "Person",
+    "name": "Author Name"
+  }
+}
+</script>
+```
+
+Use the [Schema.org Validator](https://validator.schema.org/) to test your markup.
+
+## Core Web Vitals
+
+Google uses these metrics as ranking signals:
+
+### Largest Contentful Paint (LCP)
+*Target: < 2.5 seconds*
+
+The time it takes for the main content to load. Improve it by:
+- Optimizing images (use WebP, proper sizing)
+- Preloading critical resources
+- Using a CDN
+
+### Interaction to Next Paint (INP)
+*Target: < 200 milliseconds*
+
+How quickly your site responds to user input. Improve it by:
+- Minimizing JavaScript
+- Breaking up long tasks
+- Using web workers for heavy computation
+
+### Cumulative Layout Shift (CLS)
+*Target: < 0.1*
+
+How much the page layout shifts during load. Prevent it by:
+- Setting explicit dimensions on images and videos
+- Reserving space for dynamic content
+- Avoiding inserting content above existing content
+
+## Making Your Site AI-Discoverable
+
+This is the new frontier. AI systems like ChatGPT, Claude, and Perplexity are increasingly surfacing content. Here's how to optimize for them:
+
+### 1. Create an llms.txt File
+
+```markdown
+# Site Name
+
+> Brief description of your site
+
+## Key Sections
+- [Blog](/blog) - Latest articles
+- [Documentation](/docs) - Technical guides
+
+## Recent Content
+- [Article Title](/blog/article) - Description
+```
+
+### 2. Don't Block AI Crawlers
+
+In your robots.txt:
+```
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+```
+
+### 3. Write Clear, Factual Content
+
+AI systems favor content that is:
+- Well-structured with clear headings
+- Factually accurate and up-to-date
+- Free of excessive marketing fluff
+- Comprehensive on the topic
+
+## Technical Checklist
+
+Before launching any page:
+
+- [ ] Unique, descriptive `<title>` tag (50-60 characters)
+- [ ] Compelling meta description (150-160 characters)
+- [ ] Canonical URL set
+- [ ] Open Graph tags for social sharing
+- [ ] JSON-LD structured data
+- [ ] All images have alt text
+- [ ] Page loads in under 3 seconds
+- [ ] Mobile-friendly design
+- [ ] HTTPS enabled
+- [ ] XML sitemap submitted
+
+## Conclusion
+
+SEO isn't magic—it's engineering. Build fast, accessible sites with clear structure, and you're already ahead of most of the web.
+
+The best SEO advice? Build something worth finding.

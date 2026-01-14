@@ -1,0 +1,191 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import CategoryBadge from '../components/CategoryBadge.astro';
+import TagList from '../components/TagList.astro';
+import Prose from '../components/Prose.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import SharePost from '../components/SharePost.astro';
+import NewsletterBox from '../components/NewsletterBox.astro';
+import { siteConfig } from '../config/site';
+
+export interface Props {
+  post: CollectionEntry<'blog'>;
+  categoryData?: { name: string; color?: string };
+  tagsData?: Array<{ slug: string; name: string }>;
+  headings?: Array<{ depth: number; slug: string; text: string }>;
+}
+
+const { post, categoryData, tagsData = [], headings = [] } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, heroImageAlt, category, tags = [], draft } = post.data;
+
+const author = siteConfig.author.name;
+const postUrl = Astro.url.href;
+
+// Calculate reading time (rough estimate: 200 words per minute)
+const wordCount = post.body?.split(/\s+/).length || 0;
+const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={heroImage}
+  imageAlt={heroImageAlt}
+  type="article"
+  publishedTime={pubDate}
+  modifiedTime={updatedDate}
+  author={author}
+  tags={tagsData.map(t => t.name)}
+>
+  <article class="pb-16">
+    <!-- Hero Section -->
+    <header class="relative bg-gray-900">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-0">
+          <!-- Content Side -->
+          <div class="flex flex-col justify-center px-6 md:px-12 lg:px-16 py-16 md:py-20 lg:py-28 order-2 lg:order-1">
+            {draft && (
+              <div class="mb-4 px-3 py-1.5 bg-yellow-500/90 text-yellow-900 rounded-lg text-sm font-medium inline-block w-fit">
+                Draft
+              </div>
+            )}
+
+            <div class="flex flex-wrap items-center gap-3 mb-6">
+              {categoryData && (
+                <CategoryBadge category={category} name={categoryData.name} color={categoryData.color} />
+              )}
+              <span class="text-gray-400 text-sm">
+                <FormattedDate date={pubDate} />
+              </span>
+              <span class="text-gray-500 text-sm">
+                &bull; {readingTime} min read
+              </span>
+            </div>
+
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight text-balance">
+              {title}
+            </h1>
+
+            <p class="text-lg md:text-xl text-gray-300 mb-8 leading-relaxed max-w-xl">
+              {description}
+            </p>
+
+            <!-- Author -->
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-semibold text-lg">
+                {author.charAt(0)}
+              </div>
+              <div>
+                <p class="text-white font-medium">{author}</p>
+                {updatedDate && (
+                  <p class="text-gray-400 text-sm">
+                    Updated <FormattedDate date={updatedDate} />
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <!-- Image Side -->
+          <div class="relative h-64 md:h-80 lg:h-auto lg:min-h-[500px] order-1 lg:order-2">
+            {heroImage ? (
+              <img
+                src={heroImage}
+                alt={heroImageAlt || title}
+                class="w-full h-full object-cover"
+                loading="eager"
+              />
+            ) : (
+              <div class="w-full h-full bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center">
+                <span class="text-white/20 text-9xl font-bold">
+                  {title.charAt(0)}
+                </span>
+              </div>
+            )}
+            <div class="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/50 to-transparent lg:block hidden"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content with Sidebar -->
+    <div class="max-w-7xl mx-auto px-6 md:px-8 lg:px-12">
+      <div class="grid lg:grid-cols-[280px_1fr] gap-12 lg:gap-16 pt-12 lg:pt-16">
+        <!-- Sidebar (Left) -->
+        <aside class="hidden lg:block">
+          <div class="sticky top-24 space-y-8 max-h-[calc(100vh-8rem)] overflow-y-auto pb-8">
+            <!-- Table of Contents -->
+            {headings.length > 0 && (
+              <TableOfContents headings={headings} />
+            )}
+
+            <!-- Share -->
+            <SharePost title={title} url={postUrl} />
+
+            <!-- Newsletter -->
+            <NewsletterBox variant="sidebar" />
+          </div>
+        </aside>
+
+        <!-- Content (Right) -->
+        <div class="min-w-0">
+          {tagsData.length > 0 && (
+            <div class="mb-10 pb-10 border-b border-gray-200">
+              <TagList tags={tagsData} />
+            </div>
+          )}
+
+          <Prose>
+            <slot />
+          </Prose>
+
+          <!-- Mobile Share & Newsletter -->
+          <div class="lg:hidden mt-12 pt-12 border-t border-gray-200 space-y-8">
+            <SharePost title={title} url={postUrl} />
+            <NewsletterBox variant="inline" />
+          </div>
+
+          <!-- Footer -->
+          <footer class="mt-16 pt-10 border-t border-gray-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-semibold text-xl">
+                  {author.charAt(0)}
+                </div>
+                <div>
+                  <p class="font-semibold text-gray-900">{author}</p>
+                  <p class="text-sm text-gray-500">Author</p>
+                </div>
+              </div>
+
+              <a
+                href="/blog"
+                class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
+              >
+                <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+                </svg>
+                Back to all posts
+              </a>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  /* Smooth scroll for TOC links */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Highlight active TOC item */
+  .toc a.active {
+    color: theme('colors.primary.600');
+    border-left-color: theme('colors.primary.600');
+  }
+</style>

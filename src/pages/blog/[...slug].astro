@@ -1,0 +1,38 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogPost from '../../layouts/BlogPost.astro';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const categories = await getCollection('categories');
+  const tags = await getCollection('tags');
+
+  const categoryMap = new Map(categories.map((cat) => [cat.id, cat.data]));
+  const tagMap = new Map(tags.map((tag) => [tag.id, { slug: tag.id, ...tag.data }]));
+
+  return posts.map((post) => {
+    // Remove .mdoc extension from the slug
+    const slug = post.id.replace(/\.mdoc$/, '');
+    return {
+      params: { slug },
+      props: {
+        post,
+        slug,
+        categoryData: categoryMap.get(post.data.category),
+        tagsData: (post.data.tags || [])
+          .map((tagId: string) => tagMap.get(tagId))
+          .filter(Boolean),
+      },
+    };
+  });
+}
+
+const { post, categoryData, tagsData } = Astro.props;
+const { Content, headings } = await render(post);
+---
+
+<BlogPost post={post} categoryData={categoryData} tagsData={tagsData} headings={headings}>
+  <Content />
+</BlogPost>

@@ -1,0 +1,106 @@
+---
+title: Hello World - Getting Started with Your New Blog
+description: >-
+  Welcome to your new Astro + Keystatic blog! This post shows you the features
+  available and how to customize your site.
+pubDate: 2024-01-15
+heroImageAlt: A colorful welcome illustration
+category: tutorials
+tags:
+  - astro
+  - javascript
+draft: false
+---
+Welcome to your new blog powered by **Astro** and **Keystatic**! This boilerplate is designed to be SEO-friendly, discoverable by AI tools, and easy to customize even if you're not deeply technical.
+
+{% table %}
+- 
+- 
+- 
+---
+- 
+- 
+- 
+---
+- 
+- 
+- 
+{% /table %}
+
+## What You Get
+
+This boilerplate includes everything you need to run a professional blog:
+
+- **Blazing fast performance** - Astro ships zero JavaScript by default
+- **Visual CMS** - Edit content through a friendly interface at `/keystatic`
+- **SEO optimized** - Meta tags, Open Graph, structured data built-in
+- **LLM discoverable** - AI crawlers can easily understand your content
+- **Categories & Tags** - Organize your posts with taxonomy
+- **Responsive design** - Looks great on all devices
+
+## How to Use Keystatic
+
+To create or edit content:
+
+1. Run `npm run dev` to start your development server
+1. Visit `http://localhost:4321/keystatic` in your browser
+1. Create new posts, categories, or tags using the visual editor
+1. Your changes are saved automatically to your project files
+
+## Customizing Your Site
+
+### Change Site Information
+
+Update `astro.config.mjs` to set your production URL:
+
+```javascript
+export default defineConfig({
+  site: 'https://yourdomain.com',
+  // ...
+});
+```
+
+### Customize Colors
+
+Edit `tailwind.config.mjs` to change your brand colors:
+
+```javascript
+colors: {
+  primary: {
+    500: '#your-color-here',
+    // ...
+  },
+}
+```
+
+### Update Site Name
+
+Edit `keystatic.config.ts` to change the CMS brand name, and update the components to show your site name.
+
+## SEO Features
+
+Every blog post automatically gets:
+
+- **Meta description** from your post description
+- **Open Graph tags** for social media sharing
+- **JSON-LD structured data** for search engines
+- **Canonical URLs** to prevent duplicate content
+- **Sitemap** generated automatically
+
+## LLM Discovery
+
+This site is optimized for AI discovery with:
+
+- Clean semantic HTML structure
+- `/llms.txt` file describing the site for AI crawlers
+- Explicit permissions for AI crawlers in `robots.txt`
+- Structured data helping AI understand content context
+
+## Next Steps
+
+1. Delete this example post (or keep it as reference!)
+1. Create your first real blog post
+1. Customize the design to match your brand
+1. Deploy to Vercel, Netlify, or your preferred host
+
+Happy blogging!

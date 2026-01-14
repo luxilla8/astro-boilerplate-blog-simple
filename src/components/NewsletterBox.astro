@@ -1,0 +1,60 @@
+---
+import { siteConfig } from '../config/site';
+
+export interface Props {
+  variant?: 'sidebar' | 'inline';
+}
+
+const { variant = 'sidebar' } = Astro.props;
+---
+
+<div class:list={[
+  'newsletter-box rounded-xl',
+  variant === 'sidebar' ? 'bg-gradient-to-br from-primary-50 to-primary-100 p-6' : 'bg-gray-50 p-8',
+]}>
+  <h3 class:list={[
+    'font-semibold text-gray-900',
+    variant === 'sidebar' ? 'text-sm uppercase tracking-wide mb-2' : 'text-lg mb-2',
+  ]}>
+    {variant === 'sidebar' ? 'Newsletter' : 'Subscribe to the newsletter'}
+  </h3>
+  <p class:list={[
+    'text-gray-600 mb-4',
+    variant === 'sidebar' ? 'text-sm' : 'text-base',
+  ]}>
+    Get the latest posts delivered straight to your inbox.
+  </p>
+  {siteConfig.features.newsletter.enabled ? (
+    <form action={siteConfig.features.newsletter.action} method="POST" class="space-y-3">
+      <input
+        type="email"
+        name="email"
+        placeholder="your@email.com"
+        required
+        class:list={[
+          'w-full px-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent',
+          variant === 'sidebar' ? 'bg-white' : 'bg-white',
+        ]}
+      />
+      <button
+        type="submit"
+        class="w-full px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg transition-colors"
+      >
+        Subscribe
+      </button>
+    </form>
+  ) : (
+    <a
+      href="/blog"
+      class="inline-flex items-center text-sm text-primary-600 hover:text-primary-700 font-medium"
+    >
+      Browse all articles
+      <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+      </svg>
+    </a>
+  )}
+  <p class="text-xs text-gray-500 mt-3">
+    No spam, unsubscribe at any time.
+  </p>
+</div>

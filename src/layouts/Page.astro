@@ -1,0 +1,59 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import Prose from '../components/Prose.astro';
+
+export interface Props {
+  page: CollectionEntry<'pages'>;
+}
+
+const { page } = Astro.props;
+const { title, description, heroImage, heroImageAlt } = page.data;
+---
+
+<BaseLayout title={title} description={description} image={heroImage} imageAlt={heroImageAlt}>
+  <article>
+    <!-- Hero Section -->
+    <header class="relative">
+      {heroImage ? (
+        <div class="relative h-[40vh] md:h-[45vh] overflow-hidden bg-gray-900">
+          <img
+            src={heroImage}
+            alt={heroImageAlt || title}
+            class="w-full h-full object-cover opacity-50"
+            loading="eager"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
+          <div class="absolute inset-0 flex items-end">
+            <div class="max-w-4xl mx-auto px-6 md:px-8 pb-16 md:pb-20 w-full">
+              <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 text-balance">
+                {title}
+              </h1>
+              <p class="text-xl text-gray-300 max-w-2xl leading-relaxed">
+                {description}
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-20 md:py-28">
+          <div class="max-w-4xl mx-auto px-6 md:px-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 text-balance">
+              {title}
+            </h1>
+            <p class="text-xl text-gray-300 max-w-2xl leading-relaxed">
+              {description}
+            </p>
+          </div>
+        </div>
+      )}
+    </header>
+
+    <!-- Content -->
+    <div class="max-w-4xl mx-auto px-6 md:px-8 py-16 md:py-20">
+      <Prose>
+        <slot />
+      </Prose>
+    </div>
+  </article>
+</BaseLayout>

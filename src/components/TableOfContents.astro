@@ -1,0 +1,32 @@
+---
+// Table of Contents component
+// This extracts headings from the rendered content
+export interface Props {
+  headings: Array<{ depth: number; slug: string; text: string }>;
+}
+
+const { headings } = Astro.props;
+
+// Filter to only h2 and h3
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
+---
+
+{tocHeadings.length > 0 && (
+  <nav class="toc" aria-label="Table of contents">
+    <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wide mb-4">
+      On this page
+    </h3>
+    <ul class="space-y-2 text-sm">
+      {tocHeadings.map((heading) => (
+        <li class={heading.depth === 3 ? 'ml-4' : ''}>
+          <a
+            href={`#${heading.slug}`}
+            class="block text-gray-600 hover:text-primary-600 transition-colors py-1 border-l-2 border-transparent hover:border-primary-600 pl-3 -ml-px"
+          >
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}

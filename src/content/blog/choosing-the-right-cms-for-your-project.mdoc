@@ -1,0 +1,128 @@
+---
+title: Choosing the Right CMS for Your Project
+description: A practical comparison of headless CMS options including Keystatic, Contentful, Sanity, and more. Find the best fit for your team and budget.
+pubDate: 2024-01-05
+category: technology
+tags:
+  - javascript
+draft: false
+---
+
+Choosing a CMS is one of those decisions that seems simple until you're knee-deep in options. Let's cut through the noise and figure out what actually matters.
+
+## The CMS Landscape in 2024
+
+The days of WordPress-or-nothing are long gone. Today's options fall into a few categories:
+
+1. **Traditional CMS** - WordPress, Drupal (database-backed, monolithic)
+2. **Headless CMS** - Contentful, Sanity, Strapi (API-first, decoupled)
+3. **Git-based CMS** - Keystatic, Tina, Decap (files in your repo)
+4. **Hybrid** - Payload, Directus (self-hosted, flexible)
+
+Each has its place. Let's break them down.
+
+## Git-Based CMS: The Developer's Choice
+
+This is where Keystatic shines. Your content lives as files in your Git repository—Markdown, YAML, JSON, whatever makes sense.
+
+### Pros
+- **Version control** - Full history of every change
+- **No database** - One less thing to manage
+- **Works offline** - Edit locally, push when ready
+- **No vendor lock-in** - Your content is just files
+- **Free** - No per-seat pricing
+
+### Cons
+- **Requires Git knowledge** - (or a visual editor like Keystatic)
+- **Build times** - Large sites take longer to build
+- **Real-time updates** - Requires a rebuild to see changes
+
+### Best for
+- Developer blogs and documentation
+- Small to medium content sites
+- Teams comfortable with Git workflows
+- Projects with limited budgets
+
+## Headless CMS: The Enterprise Standard
+
+Platforms like Contentful and Sanity are the go-to for larger organizations.
+
+### Pros
+- **Real-time updates** - Changes publish instantly
+- **Rich editing experience** - Great for non-technical editors
+- **Scalable** - Handle millions of entries
+- **API-first** - Use content anywhere
+
+### Cons
+- **Cost** - Can get expensive quickly
+- **Vendor lock-in** - Your content lives on their servers
+- **Complexity** - More moving parts to manage
+- **Build requirements** - Need to set up API connections
+
+### Best for
+- Enterprise content operations
+- Teams with dedicated content editors
+- Multi-channel publishing
+- Sites requiring real-time updates
+
+## The Comparison Matrix
+
+| Feature | Keystatic | Contentful | Sanity | Strapi |
+|---------|-----------|------------|--------|--------|
+| Pricing | Free | $$ | $$ | Free (self-hosted) |
+| Hosting | Your repo | Cloud | Cloud | Self-hosted |
+| Real-time | No | Yes | Yes | Yes |
+| Version control | Built-in | Limited | Limited | Limited |
+| Learning curve | Low | Medium | Medium | Medium |
+| Editor UX | Good | Excellent | Excellent | Good |
+
+## Questions to Ask
+
+Before choosing, answer these:
+
+### 1. Who will edit content?
+- Developers only? → Git-based CMS
+- Marketing team? → Headless with good UI
+- Mix? → Consider the editing experience carefully
+
+### 2. How often does content change?
+- Weekly/monthly? → Git-based is fine
+- Multiple times daily? → Headless makes more sense
+
+### 3. What's your budget?
+- Bootstrap/indie? → Git-based or self-hosted
+- Funded startup? → Headless is viable
+- Enterprise? → Budget probably isn't the constraint
+
+### 4. How technical is your team?
+- Very technical? → Git-based gives you full control
+- Mixed skills? → Prioritize the editing experience
+
+## My Recommendation
+
+For most developer-led projects—blogs, documentation, marketing sites—**start with a Git-based CMS like Keystatic**.
+
+Here's why:
+- Zero ongoing cost
+- Content lives in your repo forever
+- Visual editing for non-technical collaborators
+- Easy to migrate if you outgrow it
+
+You can always upgrade to a headless CMS later if you need real-time updates or more sophisticated content modeling. But most sites never reach that point.
+
+## Getting Started with Keystatic
+
+If you want to try Keystatic with Astro, here's the quick start:
+
+```bash
+npm create astro@latest
+npx @keystatic/cli init
+```
+
+You'll have a working CMS in minutes, with content stored right in your project.
+
+## Conclusion
+
+The "best" CMS is the one that fits your team, budget, and workflow. Don't over-engineer it—start simple and evolve as your needs grow.
+
+For content-focused sites built by developers, Git-based CMSes like Keystatic offer the best balance of simplicity, control, and cost. Give it a try.

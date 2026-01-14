@@ -1,0 +1,16 @@
+---
+export interface Props {
+  date: Date;
+  format?: 'short' | 'long';
+}
+
+const { date, format = 'long' } = Astro.props;
+
+const options: Intl.DateTimeFormatOptions = format === 'short'
+  ? { year: 'numeric', month: 'short', day: 'numeric' }
+  : { year: 'numeric', month: 'long', day: 'numeric' };
+
+const formattedDate = date.toLocaleDateString('en-US', options);
+---
+
+<span>{formattedDate}</span>

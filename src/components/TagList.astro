@@ -1,0 +1,29 @@
+---
+export interface Props {
+  tags: Array<{ slug: string; name: string }>;
+  linked?: boolean;
+}
+
+const { tags, linked = true } = Astro.props;
+---
+
+{tags.length > 0 && (
+  <div class="flex flex-wrap gap-2">
+    {tags.map((tag) => (
+      linked ? (
+        <a
+          href={`/blog/tag/${tag.slug}`}
+          class="inline-flex items-center text-sm text-gray-600 hover:text-primary-600 transition-colors"
+        >
+          <span class="text-gray-400 mr-1">#</span>
+          {tag.name}
+        </a>
+      ) : (
+        <span class="inline-flex items-center text-sm text-gray-600">
+          <span class="text-gray-400 mr-1">#</span>
+          {tag.name}
+        </span>
+      )
+    ))}
+  </div>
+)}

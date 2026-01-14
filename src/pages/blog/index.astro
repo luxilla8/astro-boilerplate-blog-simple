@@ -1,0 +1,176 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlogCard from '../../components/BlogCard.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import CategoryBadge from '../../components/CategoryBadge.astro';
+
+export const prerender = true;
+
+// Get all published blog posts, sorted by date
+const allPosts = await getCollection('blog');
+const publishedPosts = allPosts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Featured post (latest) and rest
+const [featuredPost, ...otherPosts] = publishedPosts;
+
+// Get categories for display
+const categories = await getCollection('categories');
+const categoryMap = new Map(categories.map((cat) => [cat.id, cat.data]));
+
+// Count posts per category
+const categoryCounts = new Map<string, number>();
+publishedPosts.forEach((post) => {
+  const count = categoryCounts.get(post.data.category) || 0;
+  categoryCounts.set(post.data.category, count + 1);
+});
+---
+
+<BaseLayout
+  title="Blog"
+  description="Read the latest articles on web development, technology, and more."
+>
+  <!-- Header -->
+  <div class="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-20 md:py-28">
+    <div class="max-w-6xl mx-auto px-6 md:px-8">
+      <h1 class="text-4xl md:text-5xl font-bold mb-5">
+        Blog
+      </h1>
+      <p class="text-xl text-gray-300 max-w-2xl leading-relaxed">
+        Thoughts, tutorials, and insights on web development and technology.
+      </p>
+    </div>
+  </div>
+
+  <!-- Category Filter -->
+  {categories.length > 0 && (
+    <div class="border-b border-gray-200 bg-white sticky top-16 z-40">
+      <div class="max-w-6xl mx-auto px-6 md:px-8">
+        <nav class="flex gap-2 py-4 overflow-x-auto" aria-label="Filter by category">
+          <a
+            href="/blog"
+            class="flex-shrink-0 px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-full"
+          >
+            All
+            <span class="ml-1.5 px-1.5 py-0.5 bg-white/20 rounded-full text-xs">
+              {publishedPosts.length}
+            </span>
+          </a>
+          {categories.map((category) => (
+            <a
+              href={`/blog/category/${category.id}`}
+              class="flex-shrink-0 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+            >
+              {category.data.name}
+              <span class="ml-1.5 text-gray-400 text-xs">
+                {categoryCounts.get(category.id) || 0}
+              </span>
+            </a>
+          ))}
+        </nav>
+      </div>
+    </div>
+  )}
+
+  <div class="max-w-6xl mx-auto px-6 md:px-8 py-16 md:py-20">
+    {publishedPosts.length === 0 ? (
+      <div class="text-center py-20 bg-gray-50 rounded-2xl">
+        <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+          </svg>
+        </div>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">No posts yet</h2>
+        <p class="text-gray-600 mb-6">Get started by creating your first post.</p>
+        <a
+          href="/keystatic"
+          class="inline-flex items-center px-5 py-2.5 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
+        >
+          Open Keystatic Admin
+        </a>
+      </div>
+    ) : (
+      <>
+        <!-- Featured Post -->
+        {featuredPost && (
+          <section class="mb-20">
+            <div class="flex items-center gap-2 mb-8">
+              <span class="inline-flex items-center px-3 py-1 bg-primary-100 text-primary-700 text-sm font-medium rounded-full">
+                Featured
+              </span>
+            </div>
+
+            <a href={`/blog/${featuredPost.id.replace(/\.mdoc$/, '')}`} class="group block">
+              <article class="grid md:grid-cols-2 gap-10 items-center">
+                {featuredPost.data.heroImage ? (
+                  <div class="aspect-video rounded-2xl overflow-hidden bg-gray-200 shadow-lg">
+                    <img
+                      src={featuredPost.data.heroImage}
+                      alt={featuredPost.data.heroImageAlt || featuredPost.data.title}
+                      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+                ) : (
+                  <div class="aspect-video rounded-2xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-lg">
+                    <span class="text-white/30 text-6xl font-bold">
+                      {featuredPost.data.title.charAt(0)}
+                    </span>
+                  </div>
+                )}
+
+                <div>
+                  <div class="flex items-center gap-3 mb-4">
+                    {categoryMap.get(featuredPost.data.category) && (
+                      <CategoryBadge
+                        category={featuredPost.data.category}
+                        name={categoryMap.get(featuredPost.data.category)!.name}
+                        color={categoryMap.get(featuredPost.data.category)!.color}
+                      />
+                    )}
+                    <time datetime={featuredPost.data.pubDate.toISOString()} class="text-sm text-gray-500">
+                      <FormattedDate date={featuredPost.data.pubDate} />
+                    </time>
+                  </div>
+
+                  <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors">
+                    {featuredPost.data.title}
+                  </h2>
+
+                  <p class="text-gray-600 text-lg mb-6 line-clamp-3">
+                    {featuredPost.data.description}
+                  </p>
+
+                  <span class="inline-flex items-center text-primary-600 font-medium">
+                    Read article
+                    <svg class="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </span>
+                </div>
+              </article>
+            </a>
+          </section>
+        )}
+
+        <!-- All Posts -->
+        {otherPosts.length > 0 && (
+          <section>
+            <h2 class="text-xl font-bold text-gray-900 mb-8">
+              {featuredPost ? 'More Articles' : 'All Articles'}
+            </h2>
+            <div class="grid gap-8 md:gap-10 md:grid-cols-2 lg:grid-cols-3">
+              {otherPosts.map((post) => (
+                <BlogCard
+                  post={post}
+                  categoryData={categoryMap.get(post.data.category)}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+      </>
+    )}
+  </div>
+</BaseLayout>
