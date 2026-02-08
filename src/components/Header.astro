@@ -1,7 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import { siteConfig } from '../config/site';
+import { getSiteConfig } from '../config/site';
 import Icon from './Icon.astro';
+
+const siteConfig = await getSiteConfig();
 
 // Get pages for navigation (exclude homepage since it's at /)
 const pages = await getCollection('pages');
@@ -13,10 +15,9 @@ const navPages = pages
     label: page.data.title,
   }));
 
-// Build navigation: Home, Blog, then dynamic pages
+// Build navigation: CMS nav links, then dynamic pages
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/blog', label: 'Blog' },
+  ...siteConfig.nav.links,
   ...navPages,
 ];
 

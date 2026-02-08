@@ -1,25 +1,39 @@
 ---
+import type { GetStaticPathsOptions } from 'astro';
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
 import CategoryBadge from '../../components/CategoryBadge.astro';
 import Icon from '../../components/Icon.astro';
+import Pagination from '../../components/Pagination.astro';
 
-// Get all published blog posts, sorted by date
-const allPosts = await getCollection('blog');
-const publishedPosts = allPosts
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const allPosts = await getCollection('blog');
+  const publishedPosts = allPosts
+    .filter((post) => !post.data.draft)
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
-// Featured post (latest) and rest
-const [featuredPost, ...otherPosts] = publishedPosts;
+  return paginate(publishedPosts, { pageSize: 9 });
+}
+
+const { page } = Astro.props;
+const isFirstPage = page.currentPage === 1;
+
+// Featured post (latest) only on page 1
+const featuredPost = isFirstPage ? page.data[0] : null;
+const gridPosts = isFirstPage ? page.data.slice(1) : page.data;
 
 // Get categories for display
 const categories = await getCollection('categories');
 const categoryMap = new Map(categories.map((cat) => [cat.id, cat.data]));
 
-// Count posts per category
+// Count posts per category (across ALL published posts, not just current page)
+const allPosts = await getCollection('blog');
+const publishedPosts = allPosts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
 const categoryCounts = new Map<string, number>();
 publishedPosts.forEach((post) => {
   const count = categoryCounts.get(post.data.category) || 0;
@@ -28,7 +42,7 @@ publishedPosts.forEach((post) => {
 ---
 
 <BaseLayout
-  title="Blog"
+  title={isFirstPage ? 'Blog' : `Blog - Page ${page.currentPage}`}
   description="Read the latest articles on web development, technology, and more."
 >
   <!-- Header -->
@@ -104,7 +118,7 @@ publishedPosts.forEach((post) => {
       </div>
     ) : (
       <>
-        <!-- Featured Post -->
+        <!-- Featured Post (page 1 only) -->
         {featuredPost && (
           <section class="mb-20" data-search-item data-search-title={featuredPost.data.title} data-search-description={featuredPost.data.description}>
             <div class="flex items-center gap-2 mb-8">
@@ -167,13 +181,13 @@ publishedPosts.forEach((post) => {
         )}
 
         <!-- All Posts -->
-        {otherPosts.length > 0 && (
+        {gridPosts.length > 0 && (
           <section>
             <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-8">
-              {featuredPost ? 'More Articles' : 'All Articles'}
+              {isFirstPage && featuredPost ? 'More Articles' : 'All Articles'}
             </h2>
             <div class="grid gap-8 md:gap-10 md:grid-cols-2 lg:grid-cols-3" id="blog-grid">
-              {otherPosts.map((post) => (
+              {gridPosts.map((post) => (
                 <div data-search-item data-search-title={post.data.title} data-search-description={post.data.description}>
                   <BlogCard
                     post={post}
@@ -185,10 +199,13 @@ publishedPosts.forEach((post) => {
           </section>
         )}
 
-        <!-- No results message (hidden by default) -->
+        <!-- No results message (hidden by default, shown by search) -->
         <div id="no-results" class="hidden text-center py-12">
           <p class="text-gray-500 text-lg">No posts match your search.</p>
         </div>
+
+        <!-- Pagination -->
+        <Pagination page={page} />
       </>
     )}
   </div>

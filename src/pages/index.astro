@@ -3,7 +3,8 @@ import { getCollection, render } from 'astro:content';
 import Page from '../layouts/Page.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-import { siteConfig } from '../config/site';
+import { getSiteConfig } from '../config/site';
+const siteConfig = await getSiteConfig();
 
 // Find the page marked as homepage
 const pages = await getCollection('pages');

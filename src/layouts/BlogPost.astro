@@ -10,7 +10,8 @@ import TableOfContents from '../components/TableOfContents.astro';
 import SharePost from '../components/SharePost.astro';
 import NewsletterBox from '../components/NewsletterBox.astro';
 import Icon from '../components/Icon.astro';
-import { siteConfig } from '../config/site';
+import { getSiteConfig } from '../config/site';
+const siteConfig = await getSiteConfig();
 
 export interface Props {
   post: CollectionEntry<'blog'>;

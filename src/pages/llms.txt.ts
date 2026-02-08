@@ -1,8 +1,9 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
-import { siteConfig } from '../config/site';
+import { getSiteConfig } from '../config/site';
 
 export const GET: APIRoute = async ({ site }) => {
+  const siteConfig = await getSiteConfig();
   const siteUrl = site?.href || siteConfig.url + '/';
 
   // Get published posts

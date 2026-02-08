@@ -1,6 +1,7 @@
 ---
-import { siteConfig } from '../config/site';
+import { getSiteConfig } from '../config/site';
 import Icon from './Icon.astro';
+const siteConfig = await getSiteConfig();
 
 export interface Props {
   variant?: 'sidebar' | 'inline';

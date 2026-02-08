@@ -73,4 +73,39 @@ const authors = defineCollection({
   }),
 });
 
-export const collections = { blog, authors, categories, tags, pages };
+const siteSettings = defineCollection({
+  loader: glob({ pattern: 'site-settings.yaml', base: './src/content', generateId: stripExtension }),
+  schema: z.object({
+    name: z.string(),
+    tagline: z.string().optional(),
+    description: z.string().optional(),
+    url: z.string().optional(),
+    logo: z.string().optional(),
+    ogImage: z.string().optional(),
+    authorName: z.string().optional(),
+    authorEmail: z.string().optional(),
+    authorUrl: z.string().optional(),
+    twitter: z.string().optional(),
+    github: z.string().optional(),
+    linkedin: z.string().optional(),
+    youtube: z.string().optional(),
+    instagram: z.string().optional(),
+    newsletterEnabled: z.boolean().optional().default(false),
+    newsletterProvider: z.string().optional(),
+    newsletterAction: z.string().optional(),
+    analyticsEnabled: z.boolean().optional().default(false),
+    analyticsGoogleId: z.string().optional(),
+  }),
+});
+
+const navigation = defineCollection({
+  loader: glob({ pattern: 'navigation.yaml', base: './src/content', generateId: stripExtension }),
+  schema: z.object({
+    links: z.array(z.object({
+      label: z.string(),
+      href: z.string(),
+    })),
+  }),
+});
+
+export const collections = { blog, authors, categories, tags, pages, siteSettings, navigation };

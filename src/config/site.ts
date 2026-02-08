@@ -1,88 +1,66 @@
-/**
- * Site Configuration
- * Centralized configuration for branding, metadata, and site-wide settings.
- * Edit these values to customize your site.
- */
+import { getCollection } from 'astro:content';
 
-export const siteConfig = {
-  // Basic Info
-  name: 'Astro Blog',
-  tagline: 'Thoughts, tutorials, and insights on web development',
-  description: 'A modern blog built with Astro and Keystatic, optimized for SEO and AI discovery.',
+export async function getSiteConfig() {
+  const [settings] = await getCollection('siteSettings');
+  const [nav] = await getCollection('navigation');
+  const s = settings?.data;
+  const navLinks = nav?.data?.links || [
+    { href: '/', label: 'Home' },
+    { href: '/blog', label: 'Blog' },
+  ];
 
-  // URLs
-  url: 'https://astro-boilerplate-blog-simple.vercel.app', // Your production URL (no trailing slash)
+  const socialObj = {
+    twitter: s?.twitter || '',
+    github: s?.github || '',
+    linkedin: s?.linkedin || '',
+    youtube: s?.youtube || '',
+    instagram: s?.instagram || '',
+  };
 
-  // Branding
-  logo: '/favicon.svg', // Path to logo image
-  ogImage: '/og-image.png', // Default Open Graph image
+  const sameAs = Object.entries(socialObj)
+    .filter(([, v]) => v)
+    .map(([platform, value]) =>
+      value.startsWith('http') ? value : `https://${platform}.com/${value.replace('@', '')}`
+    );
 
-  // Author/Organization
-  author: {
-    name: 'Your Name',
-    email: 'hello@example.com',
-    url: 'https://astro-boilerplate-blog-simple.vercel.app/about',
-  },
-
-  // Organization (for schema.org)
-  organization: {
-    name: 'Astro Blog',
-    logo: '/favicon.svg',
-    sameAs: [
-      // Add your social profiles
-      // 'https://twitter.com/yourusername',
-      // 'https://github.com/yourusername',
-      // 'https://linkedin.com/in/yourusername',
-    ],
-  },
-
-  // Social Links (displayed in footer/header)
-  social: {
-    twitter: '', // @username or full URL
-    github: '',
-    linkedin: '',
-    youtube: '',
-    instagram: '',
-  },
-
-  // SEO Defaults
-  seo: {
-    titleTemplate: '%s | Astro Blog', // %s will be replaced with page title
-    defaultTitle: 'Astro Blog',
-    openGraph: {
-      type: 'website',
-      locale: 'en_US',
+  return {
+    name: s?.name || 'Astro Blog',
+    tagline: s?.tagline || '',
+    description: s?.description || '',
+    url: s?.url || 'https://example.com',
+    logo: s?.logo || '/favicon.svg',
+    ogImage: s?.ogImage || '/og-image.png',
+    author: {
+      name: s?.authorName || 'Your Name',
+      email: s?.authorEmail || '',
+      url: s?.authorUrl || '',
     },
-    twitter: {
-      cardType: 'summary_large_image',
-      // site: '@yourusername', // Your Twitter username
+    organization: {
+      name: s?.name || 'Astro Blog',
+      logo: s?.logo || '/favicon.svg',
+      sameAs,
     },
-  },
+    social: socialObj,
+    seo: {
+      titleTemplate: `%s | ${s?.name || 'Astro Blog'}`,
+      defaultTitle: s?.name || 'Astro Blog',
+      openGraph: { type: 'website' as const, locale: 'en_US' },
+      twitter: { cardType: 'summary_large_image' as const },
+    },
+    features: {
+      newsletter: {
+        enabled: s?.newsletterEnabled || false,
+        provider: s?.newsletterProvider || 'mailchimp',
+        action: s?.newsletterAction || '',
+      },
+      comments: { enabled: false, provider: 'giscus' },
+      analytics: {
+        enabled: s?.analyticsEnabled || false,
+        googleId: s?.analyticsGoogleId || '',
+      },
+    },
+    nav: { links: navLinks },
+  };
+}
 
-  // Features
-  features: {
-    newsletter: {
-      enabled: false,
-      provider: 'mailchimp', // 'mailchimp', 'convertkit', 'buttondown', etc.
-      action: '', // Form action URL
-    },
-    comments: {
-      enabled: false,
-      provider: 'giscus', // 'giscus', 'disqus', etc.
-    },
-    analytics: {
-      enabled: false,
-      googleId: '', // G-XXXXXXXXXX
-    },
-  },
-
-  // Navigation
-  nav: {
-    links: [
-      { href: '/', label: 'Home' },
-      { href: '/blog', label: 'Blog' },
-    ],
-  },
-};
-
-export type SiteConfig = typeof siteConfig;
+export type SiteConfig = Awaited<ReturnType<typeof getSiteConfig>>;
