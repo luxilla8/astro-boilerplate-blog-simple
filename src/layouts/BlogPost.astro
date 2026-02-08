@@ -19,7 +19,7 @@ export interface Props {
 }
 
 const { post, categoryData, tagsData = [], headings = [] } = Astro.props;
-const { title, description, pubDate, updatedDate, heroImage, heroImageAlt, category, tags = [], draft } = post.data;
+const { title, description, pubDate, updatedDate, heroImage, heroImageAlt, category, tags = [], draft, noindex, canonicalUrl, ogImage } = post.data;
 
 const author = siteConfig.author.name;
 const postUrl = Astro.url.href;
@@ -32,13 +32,15 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 <BaseLayout
   title={title}
   description={description}
-  image={heroImage}
+  image={ogImage || heroImage}
   imageAlt={heroImageAlt}
   type="article"
   publishedTime={pubDate}
   modifiedTime={updatedDate}
   author={author}
   tags={tagsData.map(t => t.name)}
+  noindex={noindex}
+  canonicalUrl={canonicalUrl}
 >
   <article class="pb-16">
     <!-- Hero Section -->

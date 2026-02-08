@@ -18,6 +18,9 @@ const blog = defineCollection({
     category: z.string(),
     tags: z.array(z.string()).optional().default([]),
     draft: z.boolean().optional().default(false),
+    noindex: z.boolean().optional().default(false),
+    canonicalUrl: z.string().optional(),
+    ogImage: z.string().optional(),
   }),
 });
 
@@ -49,6 +52,9 @@ const pages = defineCollection({
     showInNav: z.boolean().optional().default(false),
     navOrder: z.number().optional().default(100),
     draft: z.boolean().optional().default(false),
+    noindex: z.boolean().optional().default(false),
+    canonicalUrl: z.string().optional(),
+    ogImage: z.string().optional(),
   }),
 });
 

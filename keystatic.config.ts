@@ -70,6 +70,21 @@ export default config({
           description: 'Draft posts are not published on the site',
           defaultValue: false,
         }),
+        noindex: fields.checkbox({
+          label: 'No Index',
+          description: 'Prevent search engines from indexing this post',
+          defaultValue: false,
+        }),
+        canonicalUrl: fields.url({
+          label: 'Canonical URL',
+          description: 'Override the default canonical URL (leave empty to use the post URL)',
+        }),
+        ogImage: fields.image({
+          label: 'Social Share Image',
+          description: 'Custom image for social media (1200x630px recommended). Falls back to hero image.',
+          directory: 'public/images/og',
+          publicPath: '/images/og/',
+        }),
         content: fields.markdoc({
           label: 'Content',
           description: 'The main content of your blog post',
@@ -176,6 +191,21 @@ export default config({
           label: 'Draft',
           description: 'Draft pages are not published',
           defaultValue: false,
+        }),
+        noindex: fields.checkbox({
+          label: 'No Index',
+          description: 'Prevent search engines from indexing this page',
+          defaultValue: false,
+        }),
+        canonicalUrl: fields.url({
+          label: 'Canonical URL',
+          description: 'Override the default canonical URL (leave empty to use the page URL)',
+        }),
+        ogImage: fields.image({
+          label: 'Social Share Image',
+          description: 'Custom image for social media (1200x630px recommended). Falls back to hero image.',
+          directory: 'public/images/og',
+          publicPath: '/images/og/',
         }),
         content: fields.markdoc({
           label: 'Content',

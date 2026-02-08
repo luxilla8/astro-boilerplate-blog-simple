@@ -8,10 +8,10 @@ export interface Props {
 }
 
 const { page } = Astro.props;
-const { title, description, heroImage, heroImageAlt } = page.data;
+const { title, description, heroImage, heroImageAlt, noindex, canonicalUrl, ogImage } = page.data;
 ---
 
-<BaseLayout title={title} description={description} image={heroImage} imageAlt={heroImageAlt}>
+<BaseLayout title={title} description={description} image={ogImage || heroImage} imageAlt={heroImageAlt} noindex={noindex} canonicalUrl={canonicalUrl}>
   <article>
     <!-- Hero Section -->
     <header class="relative">

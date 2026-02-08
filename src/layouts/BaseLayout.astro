@@ -14,6 +14,8 @@ export interface Props {
   modifiedTime?: Date;
   author?: string;
   tags?: string[];
+  noindex?: boolean;
+  canonicalUrl?: string;
 }
 
 const props = Astro.props;
