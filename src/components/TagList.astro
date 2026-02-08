@@ -13,14 +13,14 @@ const { tags, linked = true } = Astro.props;
       linked ? (
         <a
           href={`/blog/tag/${tag.slug}`}
-          class="inline-flex items-center text-sm text-gray-600 hover:text-primary-600 transition-colors"
+          class="inline-flex items-center text-sm text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
         >
-          <span class="text-gray-400 mr-1">#</span>
+          <span class="text-gray-400 dark:text-gray-500 mr-1">#</span>
           {tag.name}
         </a>
       ) : (
-        <span class="inline-flex items-center text-sm text-gray-600">
-          <span class="text-gray-400 mr-1">#</span>
+        <span class="inline-flex items-center text-sm text-gray-600 dark:text-gray-400">
+          <span class="text-gray-400 dark:text-gray-500 mr-1">#</span>
           {tag.name}
         </span>
       )

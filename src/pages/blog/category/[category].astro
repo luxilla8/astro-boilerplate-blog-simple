@@ -62,15 +62,15 @@ const totalPosts = allPosts.filter((post) => !post.data.draft).length;
   </div>
 
   <!-- Category Filter -->
-  <div class="border-b border-gray-200 bg-white sticky top-16 z-40">
+  <div class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-16 z-40">
     <div class="max-w-6xl mx-auto px-6 md:px-8">
       <nav class="flex gap-2 py-4 overflow-x-auto" aria-label="Filter by category">
         <a
           href="/blog"
-          class="flex-shrink-0 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+          class="flex-shrink-0 px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
         >
           All
-          <span class="ml-1.5 text-gray-400 text-xs">
+          <span class="ml-1.5 text-gray-400 dark:text-gray-500 text-xs">
             {totalPosts}
           </span>
         </a>
@@ -81,7 +81,7 @@ const totalPosts = allPosts.filter((post) => !post.data.draft).length;
               'flex-shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-colors',
               cat.id === category.id
                 ? 'bg-primary-600 text-white'
-                : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800',
             ]}
           >
             {cat.data.name}
@@ -89,7 +89,7 @@ const totalPosts = allPosts.filter((post) => !post.data.draft).length;
               'ml-1.5 text-xs',
               cat.id === category.id
                 ? 'px-1.5 py-0.5 bg-white/20 rounded-full'
-                : 'text-gray-400',
+                : 'text-gray-400 dark:text-gray-500',
             ]}>
               {categoryCounts.get(cat.id) || 0}
             </span>
@@ -111,8 +111,8 @@ const totalPosts = allPosts.filter((post) => !post.data.draft).length;
         ))}
       </div>
     ) : (
-      <div class="text-center py-20 bg-gray-50 rounded-2xl">
-        <p class="text-gray-600 mb-4">
+      <div class="text-center py-20 bg-gray-50 dark:bg-gray-800 rounded-2xl">
+        <p class="text-gray-600 dark:text-gray-400 mb-4">
           No posts in this category yet.
         </p>
         <a

@@ -58,7 +58,7 @@ publishedPosts.forEach((post) => {
         </div>
         {categories.length > 0 && (
           <>
-            <div class="w-px h-6 bg-gray-200 flex-shrink-0"></div>
+            <div class="w-px h-6 bg-gray-200 dark:bg-gray-700 flex-shrink-0"></div>
             <nav class="flex gap-2 flex-shrink-0" aria-label="Filter by category">
               <a
                 href="/blog"
@@ -72,7 +72,7 @@ publishedPosts.forEach((post) => {
               {categories.map((category) => (
                 <a
                   href={`/blog/category/${category.id}`}
-                  class="flex-shrink-0 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+                  class="flex-shrink-0 px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors"
                 >
                   {category.data.name}
                   <span class="ml-1.5 text-gray-400 text-xs">
@@ -89,12 +89,12 @@ publishedPosts.forEach((post) => {
 
   <div class="max-w-6xl mx-auto px-6 md:px-8 py-16 md:py-20">
     {publishedPosts.length === 0 ? (
-      <div class="text-center py-20 bg-gray-50 rounded-2xl">
-        <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
+      <div class="text-center py-20 bg-gray-50 dark:bg-gray-800 rounded-2xl">
+        <div class="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
           <Icon name="document" class="w-8 h-8 text-gray-400" />
         </div>
-        <h2 class="text-xl font-semibold text-gray-900 mb-2">No posts yet</h2>
-        <p class="text-gray-600 mb-6">Get started by creating your first post.</p>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">No posts yet</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">Get started by creating your first post.</p>
         <a
           href="/keystatic"
           class="inline-flex items-center px-5 py-2.5 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors"
@@ -108,7 +108,7 @@ publishedPosts.forEach((post) => {
         {featuredPost && (
           <section class="mb-20" data-search-item data-search-title={featuredPost.data.title} data-search-description={featuredPost.data.description}>
             <div class="flex items-center gap-2 mb-8">
-              <span class="inline-flex items-center px-3 py-1 bg-primary-100 text-primary-700 text-sm font-medium rounded-full">
+              <span class="inline-flex items-center px-3 py-1 bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 text-sm font-medium rounded-full">
                 Featured
               </span>
             </div>
@@ -116,7 +116,7 @@ publishedPosts.forEach((post) => {
             <a href={`/blog/${featuredPost.id}`} class="group block">
               <article class="grid md:grid-cols-2 gap-10 items-center">
                 {featuredPost.data.heroImage ? (
-                  <div class="aspect-video rounded-2xl overflow-hidden bg-gray-200 shadow-lg">
+                  <div class="aspect-video rounded-2xl overflow-hidden bg-gray-200 dark:bg-gray-700 shadow-lg">
                     <img
                       src={featuredPost.data.heroImage}
                       alt={featuredPost.data.heroImageAlt || featuredPost.data.title}

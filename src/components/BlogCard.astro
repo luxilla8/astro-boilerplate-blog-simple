@@ -17,7 +17,7 @@ const slug = post.id;
 <article class="group flex flex-col h-full bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden hover:border-gray-300 dark:hover:border-gray-600 hover:shadow-lg transition-all duration-300">
   <a href={`/blog/${slug}`} class="block">
     {heroImage ? (
-      <div class="aspect-video overflow-hidden bg-gray-100">
+      <div class="aspect-video overflow-hidden bg-gray-100 dark:bg-gray-700">
         <img
           src={heroImage}
           alt={heroImageAlt || title}
@@ -40,7 +40,7 @@ const slug = post.id;
       {categoryData && (
         <CategoryBadge category={category} name={categoryData.name} color={categoryData.color} size="sm" />
       )}
-      <time datetime={pubDate.toISOString()} class="text-xs text-gray-500">
+      <time datetime={pubDate.toISOString()} class="text-xs text-gray-500 dark:text-gray-400">
         <FormattedDate date={pubDate} format="short" />
       </time>
     </div>
