@@ -9,7 +9,13 @@ import vercel from '@astrojs/vercel';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://example.com', // Replace with your production URL
-  adapter: vercel(),
+  adapter: vercel({
+    imageService: true,
+  }),
+  image: {
+    domains: [],        // Add allowed remote image domains here
+    remotePatterns: [],  // Or use patterns like { protocol: 'https', hostname: '**.example.com' }
+  },
   integrations: [
     react(),
     markdoc(),

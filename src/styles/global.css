@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Use class-based dark mode (toggled via .dark on <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Brand colors - customize these for your site */
   --color-primary-50: #f0f9ff;
@@ -45,4 +48,29 @@ a {
 }
 .prose {
   max-width: 65ch;
+}
+
+/* Dark mode prose overrides */
+.dark .prose {
+  --tw-prose-body: #d1d5db;
+  --tw-prose-headings: #f3f4f6;
+  --tw-prose-links: #38bdf8;
+  --tw-prose-bold: #f3f4f6;
+  --tw-prose-counters: #9ca3af;
+  --tw-prose-bullets: #6b7280;
+  --tw-prose-hr: #374151;
+  --tw-prose-quotes: #d1d5db;
+  --tw-prose-quote-borders: #374151;
+  --tw-prose-captions: #9ca3af;
+  --tw-prose-code: #f3f4f6;
+  --tw-prose-pre-code: #e5e7eb;
+  --tw-prose-pre-bg: #1f2937;
+  --tw-prose-th-borders: #4b5563;
+  --tw-prose-td-borders: #374151;
+}
+.dark .prose a {
+  color: var(--color-primary-400);
+}
+.dark .prose a:hover {
+  color: var(--color-primary-300);
 }

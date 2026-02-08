@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../config/site';
+import Icon from './Icon.astro';
 
 // Get pages for navigation (exclude homepage since it's at /)
 const pages = await getCollection('pages');
@@ -22,62 +23,73 @@ const navLinks = [
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-lg">
+<header class="sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg transition-colors">
   <nav class="max-w-6xl mx-auto px-6 md:px-8" aria-label="Main navigation">
     <div class="flex items-center justify-between h-16">
-      <a href="/" class="flex items-center gap-2 text-xl font-bold text-gray-900 hover:text-primary-600 transition-colors">
+      <a href="/" class="flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
         <div class="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center text-white text-sm font-bold">
           {siteConfig.name.charAt(0)}
         </div>
         <span class="hidden sm:inline">{siteConfig.name}</span>
       </a>
 
-      <!-- Desktop nav -->
-      <ul class="hidden md:flex items-center gap-1 sm:gap-2" role="list">
-        {navLinks.map((link) => {
-          const isActive = currentPath === link.href ||
-            (link.href !== '/' && currentPath.startsWith(link.href));
-          return (
-            <li>
-              <a
-                href={link.href}
-                class:list={[
-                  'px-3 py-2 text-sm font-medium rounded-lg transition-colors',
-                  isActive
-                    ? 'bg-primary-50 text-primary-700'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
-                ]}
-                aria-current={currentPath === link.href ? 'page' : undefined}
-              >
-                {link.label}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+      <div class="flex items-center gap-1">
+        <!-- Desktop nav -->
+        <ul class="hidden md:flex items-center gap-1 sm:gap-2" role="list">
+          {navLinks.map((link) => {
+            const isActive = currentPath === link.href ||
+              (link.href !== '/' && currentPath.startsWith(link.href));
+            return (
+              <li>
+                <a
+                  href={link.href}
+                  class:list={[
+                    'px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                    isActive
+                      ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800',
+                  ]}
+                  aria-current={currentPath === link.href ? 'page' : undefined}
+                >
+                  {link.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
 
-      <!-- Mobile menu button -->
-      <button
-        type="button"
-        class="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-        aria-expanded="false"
-        aria-controls="mobile-menu"
-        id="mobile-menu-button"
-      >
-        <span class="sr-only">Open menu</span>
-        <!-- Hamburger icon -->
-        <svg class="h-6 w-6 block" id="menu-icon-open" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-        </svg>
-        <!-- Close icon -->
-        <svg class="h-6 w-6 hidden" id="menu-icon-close" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
+        <!-- Dark mode toggle -->
+        <button
+          type="button"
+          id="theme-toggle"
+          class="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          aria-label="Toggle dark mode"
+        >
+          <Icon name="sun" class="w-5 h-5 hidden dark:block" />
+          <Icon name="moon" class="w-5 h-5 block dark:hidden" />
+        </button>
+
+        <!-- Mobile menu button -->
+        <button
+          type="button"
+          class="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          aria-expanded="false"
+          aria-controls="mobile-menu"
+          id="mobile-menu-button"
+        >
+          <span class="sr-only">Open menu</span>
+          <svg class="h-6 w-6 block" id="menu-icon-open" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+          <svg class="h-6 w-6 hidden" id="menu-icon-close" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
     </div>
 
     <!-- Mobile menu panel -->
-    <div class="hidden md:hidden border-t border-gray-200 py-3" id="mobile-menu">
+    <div class="hidden md:hidden border-t border-gray-200 dark:border-gray-700 py-3" id="mobile-menu">
       <ul class="space-y-1" role="list">
         {navLinks.map((link) => {
           const isActive = currentPath === link.href ||
@@ -89,8 +101,8 @@ const currentPath = Astro.url.pathname;
                 class:list={[
                   'block px-3 py-2 text-base font-medium rounded-lg transition-colors',
                   isActive
-                    ? 'bg-primary-50 text-primary-700'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
+                    ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800',
                 ]}
                 aria-current={currentPath === link.href ? 'page' : undefined}
               >
@@ -105,6 +117,7 @@ const currentPath = Astro.url.pathname;
 </header>
 
 <script>
+  // Mobile menu toggle
   const button = document.getElementById('mobile-menu-button');
   const menu = document.getElementById('mobile-menu');
   const iconOpen = document.getElementById('menu-icon-open');
@@ -118,5 +131,13 @@ const currentPath = Astro.url.pathname;
     iconClose?.classList.toggle('hidden');
     iconOpen?.classList.toggle('block');
     iconClose?.classList.toggle('block');
+  });
+
+  // Dark mode toggle
+  const themeToggle = document.getElementById('theme-toggle');
+
+  themeToggle?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
   });
 </script>

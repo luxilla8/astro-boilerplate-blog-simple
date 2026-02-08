@@ -43,35 +43,49 @@ publishedPosts.forEach((post) => {
     </div>
   </div>
 
-  <!-- Category Filter -->
-  {categories.length > 0 && (
-    <div class="border-b border-gray-200 bg-white sticky top-16 z-40">
-      <div class="max-w-6xl mx-auto px-6 md:px-8">
-        <nav class="flex gap-2 py-4 overflow-x-auto" aria-label="Filter by category">
-          <a
-            href="/blog"
-            class="flex-shrink-0 px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-full"
-          >
-            All
-            <span class="ml-1.5 px-1.5 py-0.5 bg-white/20 rounded-full text-xs">
-              {publishedPosts.length}
-            </span>
-          </a>
-          {categories.map((category) => (
-            <a
-              href={`/blog/category/${category.id}`}
-              class="flex-shrink-0 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
-            >
-              {category.data.name}
-              <span class="ml-1.5 text-gray-400 text-xs">
-                {categoryCounts.get(category.id) || 0}
-              </span>
-            </a>
-          ))}
-        </nav>
+  <!-- Search & Category Filter -->
+  <div class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-16 z-40">
+    <div class="max-w-6xl mx-auto px-6 md:px-8">
+      <div class="flex items-center gap-4 py-4 overflow-x-auto">
+        <div class="relative flex-shrink-0 w-56">
+          <Icon name="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+          <input
+            type="search"
+            id="blog-search"
+            placeholder="Search posts..."
+            class="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+        </div>
+        {categories.length > 0 && (
+          <>
+            <div class="w-px h-6 bg-gray-200 flex-shrink-0"></div>
+            <nav class="flex gap-2 flex-shrink-0" aria-label="Filter by category">
+              <a
+                href="/blog"
+                class="flex-shrink-0 px-4 py-2 text-sm font-medium bg-primary-600 text-white rounded-full"
+              >
+                All
+                <span class="ml-1.5 px-1.5 py-0.5 bg-white/20 rounded-full text-xs">
+                  {publishedPosts.length}
+                </span>
+              </a>
+              {categories.map((category) => (
+                <a
+                  href={`/blog/category/${category.id}`}
+                  class="flex-shrink-0 px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  {category.data.name}
+                  <span class="ml-1.5 text-gray-400 text-xs">
+                    {categoryCounts.get(category.id) || 0}
+                  </span>
+                </a>
+              ))}
+            </nav>
+          </>
+        )}
       </div>
     </div>
-  )}
+  </div>
 
   <div class="max-w-6xl mx-auto px-6 md:px-8 py-16 md:py-20">
     {publishedPosts.length === 0 ? (
@@ -92,7 +106,7 @@ publishedPosts.forEach((post) => {
       <>
         <!-- Featured Post -->
         {featuredPost && (
-          <section class="mb-20">
+          <section class="mb-20" data-search-item data-search-title={featuredPost.data.title} data-search-description={featuredPost.data.description}>
             <div class="flex items-center gap-2 mb-8">
               <span class="inline-flex items-center px-3 py-1 bg-primary-100 text-primary-700 text-sm font-medium rounded-full">
                 Featured
@@ -107,6 +121,9 @@ publishedPosts.forEach((post) => {
                       src={featuredPost.data.heroImage}
                       alt={featuredPost.data.heroImageAlt || featuredPost.data.title}
                       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="eager"
+                      fetchpriority="high"
+                      decoding="async"
                     />
                   </div>
                 ) : (
@@ -131,11 +148,11 @@ publishedPosts.forEach((post) => {
                     </time>
                   </div>
 
-                  <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors">
+                  <h2 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                     {featuredPost.data.title}
                   </h2>
 
-                  <p class="text-gray-600 text-lg mb-6 line-clamp-3">
+                  <p class="text-gray-600 dark:text-gray-400 text-lg mb-6 line-clamp-3">
                     {featuredPost.data.description}
                   </p>
 
@@ -152,20 +169,50 @@ publishedPosts.forEach((post) => {
         <!-- All Posts -->
         {otherPosts.length > 0 && (
           <section>
-            <h2 class="text-xl font-bold text-gray-900 mb-8">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-8">
               {featuredPost ? 'More Articles' : 'All Articles'}
             </h2>
-            <div class="grid gap-8 md:gap-10 md:grid-cols-2 lg:grid-cols-3">
+            <div class="grid gap-8 md:gap-10 md:grid-cols-2 lg:grid-cols-3" id="blog-grid">
               {otherPosts.map((post) => (
-                <BlogCard
-                  post={post}
-                  categoryData={categoryMap.get(post.data.category)}
-                />
+                <div data-search-item data-search-title={post.data.title} data-search-description={post.data.description}>
+                  <BlogCard
+                    post={post}
+                    categoryData={categoryMap.get(post.data.category)}
+                  />
+                </div>
               ))}
             </div>
           </section>
         )}
+
+        <!-- No results message (hidden by default) -->
+        <div id="no-results" class="hidden text-center py-12">
+          <p class="text-gray-500 text-lg">No posts match your search.</p>
+        </div>
       </>
     )}
   </div>
 </BaseLayout>
+
+<script>
+  const searchInput = document.getElementById('blog-search') as HTMLInputElement;
+  const items = document.querySelectorAll('[data-search-item]');
+  const noResults = document.getElementById('no-results');
+
+  searchInput?.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase().trim();
+    let visible = 0;
+
+    items.forEach((item) => {
+      const title = (item as HTMLElement).dataset.searchTitle?.toLowerCase() || '';
+      const desc = (item as HTMLElement).dataset.searchDescription?.toLowerCase() || '';
+      const match = !query || title.includes(query) || desc.includes(query);
+      (item as HTMLElement).style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+
+    if (noResults) {
+      noResults.classList.toggle('hidden', visible > 0);
+    }
+  });
+</script>

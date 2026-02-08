@@ -97,6 +97,8 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
                 alt={heroImageAlt || title}
                 class="w-full h-full object-cover"
                 loading="eager"
+                fetchpriority="high"
+                decoding="async"
               />
             ) : (
               <div class="w-full h-full bg-gradient-to-br from-primary-600 to-primary-800 flex items-center justify-center">
@@ -133,7 +135,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
         <!-- Content (Right) -->
         <div class="min-w-0">
           {tagsData.length > 0 && (
-            <div class="mb-10 pb-10 border-b border-gray-200">
+            <div class="mb-10 pb-10 border-b border-gray-200 dark:border-gray-700">
               <TagList tags={tagsData} />
             </div>
           )}
@@ -143,21 +145,21 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
           </Prose>
 
           <!-- Mobile Share & Newsletter -->
-          <div class="lg:hidden mt-12 pt-12 border-t border-gray-200 space-y-8">
+          <div class="lg:hidden mt-12 pt-12 border-t border-gray-200 dark:border-gray-700 space-y-8">
             <SharePost title={title} url={postUrl} />
             <NewsletterBox variant="inline" />
           </div>
 
           <!-- Footer -->
-          <footer class="mt-16 pt-10 border-t border-gray-200">
+          <footer class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-700">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div class="flex items-center gap-4">
                 <div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-semibold text-xl">
                   {author.charAt(0)}
                 </div>
                 <div>
-                  <p class="font-semibold text-gray-900">{author}</p>
-                  <p class="text-sm text-gray-500">Author</p>
+                  <p class="font-semibold text-gray-900 dark:text-gray-100">{author}</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">Author</p>
                 </div>
               </div>
 

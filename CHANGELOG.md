@@ -388,10 +388,130 @@ Vercel-only deployment path.
 
 ---
 
+---
+
+---
+
+### Priority 4: Differentiation features
+
+These features go beyond fixing and modernizing — they add capabilities that make
+this boilerplate genuinely more useful than starting from scratch.
+
+---
+
+#### 13. Added client-side blog search
+
+**Files changed:**
+- `src/pages/blog/index.astro` — added search input and filtering script
+
+**Why:** A blog with more than a handful of posts needs a way to find content.
+The category filter already existed, but it only works for broad topics. Search
+lets users find posts by specific keywords in titles or descriptions.
+
+The implementation is deliberately simple:
+
+1. A search input sits in the sticky filter bar alongside the category pills.
+   It has a magnifying glass icon and a divider separating it from the categories.
+2. Each post (both the featured section and the grid cards) has `data-search-*`
+   attributes containing the post's title and description.
+3. A small `<script>` listens for `input` events and toggles `display: none` on
+   posts that don't match the query. Case-insensitive substring matching.
+4. When no posts match, a "No posts match your search" message appears.
+
+This is a client-side filter, not a full-text search engine. It works because
+all posts are already rendered in the HTML (static site) — no API calls, no
+search index, no JavaScript framework. It handles dozens of posts well. For
+hundreds of posts, you'd want something like Pagefind or Fuse.js, but that's
+beyond what a boilerplate should ship.
+
+---
+
+#### 14. Added image performance attributes
+
+**Files changed:**
+- `src/components/BlogCard.astro` — added `decoding="async"` to lazy-loaded images
+- `src/layouts/BlogPost.astro` — added `fetchpriority="high"` and `decoding="async"`
+  to the hero image (LCP element)
+- `src/pages/blog/index.astro` — added `loading="eager"`, `fetchpriority="high"`,
+  and `decoding="async"` to the featured post image
+- `astro.config.mjs` — enabled Vercel image optimization service
+
+**Why:** The existing `<img>` tags were missing performance hints that browsers use
+to prioritize loading. These attributes cost nothing to add but meaningfully
+improve Core Web Vitals:
+
+- **`fetchpriority="high"`** on hero images (the LCP candidate) tells the browser
+  to prioritize downloading this image over others. Without it, the browser treats
+  all images equally and may delay the hero image in favor of an off-screen image.
+- **`decoding="async"`** tells the browser it doesn't need to block rendering while
+  decoding the image. This prevents the main thread from stalling on large images.
+- **`loading="eager"`** on above-the-fold images prevents the browser from lazy-loading
+  them (which would delay LCP).
+
+The Vercel image optimization service (`imageService: true` in the adapter config)
+enables Astro's `<Image />` component to use Vercel's CDN-based image optimizer.
+When users add images through the CMS, they can use `<Image />` for automatic
+format conversion (WebP/AVIF), responsive sizing, and CDN caching — no local
+image processing toolchain needed.
+
+The `domains` and `remotePatterns` arrays in the `image` config are empty by
+default. Users should add their image CDN domains there when they start using
+remote images.
+
+---
+
+#### 15. Added dark mode toggle
+
+**Files changed:**
+- `src/styles/global.css` — added `@custom-variant dark` for class-based toggling,
+  added dark mode prose overrides
+- `src/layouts/BaseLayout.astro` — added dark mode initialization script in `<head>`,
+  added `dark:` classes to `<body>`
+- `src/components/Header.astro` — added dark mode toggle button with sun/moon icons,
+  added `dark:` classes to all header elements
+- `src/components/Icon.astro` — added `sun` and `moon` icons
+- `src/components/BlogCard.astro` — added `dark:` classes for card background,
+  borders, and text
+- `src/pages/blog/index.astro` — added `dark:` classes to filter bar, search input,
+  headings, and descriptions
+- `src/pages/index.astro` — added `dark:` classes to feature cards, CTA section,
+  headings, and text
+- `src/layouts/BlogPost.astro` — added `dark:` classes to borders, text, and
+  content dividers
+
+**Why:** Dark mode is expected in 2026. Users of this boilerplate will want it,
+and adding it after the fact is tedious because it touches every component.
+Shipping it from day one means users start with a fully themed foundation.
+
+The implementation follows the standard pattern for Astro + Tailwind:
+
+1. **Class-based toggling.** The `@custom-variant dark` directive in CSS tells
+   Tailwind to activate `dark:` utilities when `.dark` is present on an ancestor
+   element (instead of the default `prefers-color-scheme` media query). This gives
+   users explicit control via the toggle button.
+
+2. **Flash prevention.** An inline `<script>` in `<head>` (before any rendering)
+   checks `localStorage` for a saved preference, falling back to
+   `prefers-color-scheme` if none exists. If dark mode should be active, it adds
+   the `.dark` class to `<html>` immediately — before the browser paints. This
+   prevents the "flash of light theme" that plagues naive dark mode implementations.
+
+3. **Three-state logic.** The system respects the user's OS preference by default
+   (via `prefers-color-scheme`). Once the user clicks the toggle, their explicit
+   choice is saved to `localStorage` and takes priority over the OS setting.
+
+4. **Prose typography.** Dark mode prose content gets its own set of CSS custom
+   properties for body text, headings, links, code blocks, borders, and quotes.
+   This ensures Markdoc-rendered blog content is readable in dark mode.
+
+5. **Footer unchanged.** The footer was already designed with a dark background
+   (`bg-gray-900`), so it looks correct in both modes without changes.
+
+---
+
 ### Build verification
 
-After all Priority 1, Priority 2, and Priority 3 changes, the build completes
-successfully:
+After all Priority 1–4 changes, the build completes successfully:
 
 - Zero errors, zero content warnings, zero lint errors
 - 20 static HTML pages pre-rendered (15 pages + 2 categories + 3 tags)
@@ -401,3 +521,6 @@ successfully:
 - All output written to `.vercel/output/static/` for CDN edge delivery
 - ESLint passes with zero violations
 - Mobile hamburger menu functional on viewports below 768px
+- Dark mode toggle works with localStorage persistence and OS preference fallback
+- Client-side search filters posts by title and description in real time
+- Hero images use `fetchpriority="high"` for LCP optimization
