@@ -11,6 +11,7 @@ export default config({
     navigation: {
       'Content': ['blog', 'pages'],
       'Taxonomy': ['categories', 'tags'],
+      'People': ['authors'],
       'Settings': ['siteSettings', 'navigation'],
     },
   },
@@ -65,6 +66,11 @@ export default config({
           description: 'Select one or more tags',
           collection: 'tags',
         }),
+        author: fields.relationship({
+          label: 'Author',
+          description: 'Select the post author',
+          collection: 'authors',
+        }),
         draft: fields.checkbox({
           label: 'Draft',
           description: 'Draft posts are not published on the site',
@@ -89,6 +95,40 @@ export default config({
           label: 'Content',
           description: 'The main content of your blog post',
         }),
+      },
+    }),
+    authors: collection({
+      label: 'Authors',
+      slugField: 'name',
+      path: 'src/content/authors/*',
+      format: { data: 'yaml' },
+      schema: {
+        name: fields.slug({
+          name: {
+            label: 'Author Name',
+            validation: { isRequired: true },
+          },
+        }),
+        bio: fields.text({
+          label: 'Bio',
+          description: 'Short author biography',
+          multiline: true,
+        }),
+        email: fields.text({
+          label: 'Email',
+        }),
+        url: fields.url({
+          label: 'Website',
+        }),
+        avatar: fields.image({
+          label: 'Avatar',
+          description: 'Author profile photo',
+          directory: 'public/images/authors',
+          publicPath: '/images/authors/',
+        }),
+        twitter: fields.text({ label: 'Twitter' }),
+        github: fields.text({ label: 'GitHub' }),
+        linkedin: fields.text({ label: 'LinkedIn' }),
       },
     }),
     categories: collection({

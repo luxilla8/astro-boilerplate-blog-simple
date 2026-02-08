@@ -17,6 +17,7 @@ const blog = defineCollection({
     heroImageAlt: z.string().optional(),
     category: z.string(),
     tags: z.array(z.string()).optional().default([]),
+    author: z.string().optional(),
     draft: z.boolean().optional().default(false),
     noindex: z.boolean().optional().default(false),
     canonicalUrl: z.string().optional(),
@@ -58,4 +59,18 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { blog, categories, tags, pages };
+const authors = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/authors', generateId: stripExtension }),
+  schema: z.object({
+    name: z.string(),
+    bio: z.string().optional(),
+    email: z.string().optional(),
+    url: z.string().optional(),
+    avatar: z.string().optional(),
+    twitter: z.string().optional(),
+    github: z.string().optional(),
+    linkedin: z.string().optional(),
+  }),
+});
+
+export const collections = { blog, authors, categories, tags, pages };

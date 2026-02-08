@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import CategoryBadge from '../components/CategoryBadge.astro';
@@ -21,7 +22,13 @@ export interface Props {
 const { post, categoryData, tagsData = [], headings = [] } = Astro.props;
 const { title, description, pubDate, updatedDate, heroImage, heroImageAlt, category, tags = [], draft, noindex, canonicalUrl, ogImage } = post.data;
 
-const author = siteConfig.author.name;
+const authors = await getCollection('authors');
+const authorData = post.data.author
+  ? authors.find(a => a.id === post.data.author)
+  : authors[0];
+const author = authorData?.data.name || siteConfig.author.name;
+const authorSlug = authorData?.id;
+const authorAvatar = authorData?.data.avatar;
 const postUrl = Astro.url.href;
 
 // Calculate reading time (rough estimate: 200 words per minute)
@@ -77,11 +84,27 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
             <!-- Author -->
             <div class="flex items-center gap-4">
-              <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-semibold text-lg">
-                {author.charAt(0)}
-              </div>
+              {authorAvatar ? (
+                <img
+                  src={authorAvatar}
+                  alt={author}
+                  class="w-12 h-12 rounded-full object-cover"
+                  loading="eager"
+                  decoding="async"
+                />
+              ) : (
+                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-semibold text-lg">
+                  {author.charAt(0)}
+                </div>
+              )}
               <div>
-                <p class="text-white font-medium">{author}</p>
+                {authorSlug ? (
+                  <a href={`/authors/${authorSlug}`} class="text-white font-medium hover:text-primary-400 transition-colors">
+                    {author}
+                  </a>
+                ) : (
+                  <p class="text-white font-medium">{author}</p>
+                )}
                 {updatedDate && (
                   <p class="text-gray-400 text-sm">
                     Updated <FormattedDate date={updatedDate} />
@@ -156,11 +179,27 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
           <footer class="mt-16 pt-10 border-t border-gray-200 dark:border-gray-700">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div class="flex items-center gap-4">
-                <div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-semibold text-xl">
-                  {author.charAt(0)}
-                </div>
+                {authorAvatar ? (
+                  <img
+                    src={authorAvatar}
+                    alt={author}
+                    class="w-14 h-14 rounded-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <div class="w-14 h-14 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white font-semibold text-xl">
+                    {author.charAt(0)}
+                  </div>
+                )}
                 <div>
-                  <p class="font-semibold text-gray-900 dark:text-gray-100">{author}</p>
+                  {authorSlug ? (
+                    <a href={`/authors/${authorSlug}`} class="font-semibold text-gray-900 dark:text-gray-100 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                      {author}
+                    </a>
+                  ) : (
+                    <p class="font-semibold text-gray-900 dark:text-gray-100">{author}</p>
+                  )}
                   <p class="text-sm text-gray-500 dark:text-gray-400">Author</p>
                 </div>
               </div>
