@@ -1,4 +1,4 @@
-import { config, collection, fields } from '@keystatic/core';
+import { config, collection, singleton, fields } from '@keystatic/core';
 
 export default config({
   storage: {
@@ -6,7 +6,12 @@ export default config({
   },
   ui: {
     brand: {
-      name: 'My Blog',
+      name: 'Blog Admin',
+    },
+    navigation: {
+      'Content': ['blog', 'pages'],
+      'Taxonomy': ['categories', 'tags'],
+      'Settings': ['siteSettings', 'navigation'],
     },
   },
   collections: {
@@ -176,6 +181,99 @@ export default config({
           label: 'Content',
           description: 'The main content of the page',
         }),
+      },
+    }),
+  },
+  singletons: {
+    siteSettings: singleton({
+      label: 'Site Settings',
+      path: 'src/content/site-settings',
+      format: { data: 'yaml' },
+      schema: {
+        name: fields.text({
+          label: 'Site Name',
+          validation: { isRequired: true },
+        }),
+        tagline: fields.text({
+          label: 'Tagline',
+        }),
+        description: fields.text({
+          label: 'Description',
+          multiline: true,
+        }),
+        url: fields.url({
+          label: 'Site URL',
+        }),
+        logo: fields.text({
+          label: 'Logo',
+        }),
+        ogImage: fields.text({
+          label: 'OG Image',
+        }),
+        authorName: fields.text({
+          label: 'Author Name',
+        }),
+        authorEmail: fields.text({
+          label: 'Author Email',
+        }),
+        authorUrl: fields.url({
+          label: 'Author URL',
+        }),
+        twitter: fields.text({
+          label: 'Twitter',
+        }),
+        github: fields.text({
+          label: 'GitHub',
+        }),
+        linkedin: fields.text({
+          label: 'LinkedIn',
+        }),
+        youtube: fields.text({
+          label: 'YouTube',
+        }),
+        instagram: fields.text({
+          label: 'Instagram',
+        }),
+        newsletterEnabled: fields.checkbox({
+          label: 'Newsletter Enabled',
+          defaultValue: false,
+        }),
+        newsletterProvider: fields.text({
+          label: 'Newsletter Provider',
+        }),
+        newsletterAction: fields.text({
+          label: 'Newsletter Action URL',
+        }),
+        analyticsEnabled: fields.checkbox({
+          label: 'Analytics Enabled',
+          defaultValue: false,
+        }),
+        analyticsGoogleId: fields.text({
+          label: 'Google Analytics ID',
+        }),
+      },
+    }),
+    navigation: singleton({
+      label: 'Navigation',
+      path: 'src/content/navigation',
+      format: { data: 'yaml' },
+      schema: {
+        links: fields.array(
+          fields.object({
+            label: fields.text({
+              label: 'Label',
+              validation: { isRequired: true },
+            }),
+            href: fields.text({
+              label: 'URL',
+              validation: { isRequired: true },
+            }),
+          }),
+          {
+            label: 'Navigation Links',
+            itemLabel: (props) => props.fields.label.value,
+          },
+        ),
       },
     }),
   },

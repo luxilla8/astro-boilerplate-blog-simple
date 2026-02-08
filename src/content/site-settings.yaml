@@ -1,0 +1,19 @@
+name: Astro Blog
+tagline: Thoughts, tutorials, and insights on web development
+description: A modern blog built with Astro and Keystatic, optimized for SEO and AI discovery.
+url: https://astro-boilerplate-blog-simple.vercel.app
+logo: /favicon.svg
+ogImage: /og-image.png
+authorName: ''
+authorEmail: ''
+authorUrl: ''
+twitter: ''
+github: ''
+linkedin: ''
+youtube: ''
+instagram: ''
+newsletterEnabled: false
+newsletterProvider: ''
+newsletterAction: ''
+analyticsEnabled: false
+analyticsGoogleId: ''

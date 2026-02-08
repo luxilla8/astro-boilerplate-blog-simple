@@ -6,12 +6,12 @@
 
 export const siteConfig = {
   // Basic Info
-  name: 'My Blog',
+  name: 'Astro Blog',
   tagline: 'Thoughts, tutorials, and insights on web development',
   description: 'A modern blog built with Astro and Keystatic, optimized for SEO and AI discovery.',
 
   // URLs
-  url: 'https://example.com', // Your production URL (no trailing slash)
+  url: 'https://astro-boilerplate-blog-simple.vercel.app', // Your production URL (no trailing slash)
 
   // Branding
   logo: '/favicon.svg', // Path to logo image
@@ -21,12 +21,12 @@ export const siteConfig = {
   author: {
     name: 'Your Name',
     email: 'hello@example.com',
-    url: 'https://example.com/about',
+    url: 'https://astro-boilerplate-blog-simple.vercel.app/about',
   },
 
   // Organization (for schema.org)
   organization: {
-    name: 'My Blog',
+    name: 'Astro Blog',
     logo: '/favicon.svg',
     sameAs: [
       // Add your social profiles
@@ -47,8 +47,8 @@ export const siteConfig = {
 
   // SEO Defaults
   seo: {
-    titleTemplate: '%s | My Blog', // %s will be replaced with page title
-    defaultTitle: 'My Blog',
+    titleTemplate: '%s | Astro Blog', // %s will be replaced with page title
+    defaultTitle: 'Astro Blog',
     openGraph: {
       type: 'website',
       locale: 'en_US',
