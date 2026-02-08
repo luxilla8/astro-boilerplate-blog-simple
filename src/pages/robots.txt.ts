@@ -1,7 +1,5 @@
 import type { APIRoute } from 'astro';
 
-export const prerender = true;
-
 export const GET: APIRoute = async ({ site }) => {
   const siteUrl = site?.href || 'https://example.com/';
 

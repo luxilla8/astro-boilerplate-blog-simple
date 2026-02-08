@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import FormattedDate from './FormattedDate.astro';
 import CategoryBadge from './CategoryBadge.astro';
+import Icon from './Icon.astro';
 
 export interface Props {
   post: CollectionEntry<'blog'>;
@@ -10,7 +11,7 @@ export interface Props {
 
 const { post, categoryData } = Astro.props;
 const { title, description, pubDate, heroImage, heroImageAlt, category } = post.data;
-const slug = post.id.replace(/\.mdoc$/, '');
+const slug = post.id;
 ---
 
 <article class="group flex flex-col h-full bg-white rounded-2xl border border-gray-200 overflow-hidden hover:border-gray-300 hover:shadow-lg transition-all duration-300">
@@ -58,9 +59,7 @@ const slug = post.id.replace(/\.mdoc$/, '');
       class="inline-flex items-center text-sm text-primary-600 font-medium group-hover:gap-2 transition-all mt-auto"
     >
       Read more
-      <svg class="ml-1 w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-      </svg>
+      <Icon name="arrow-right" class="ml-1 w-4 h-4 transition-transform group-hover:translate-x-1" />
     </a>
   </div>
 </article>

@@ -2,8 +2,6 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { siteConfig } from '../config/site';
 
-export const prerender = true;
-
 export const GET: APIRoute = async ({ site }) => {
   const siteUrl = site?.href || siteConfig.url + '/';
 
@@ -36,7 +34,7 @@ ${siteConfig.tagline}. This site is designed to be fast, accessible, and easy to
 
 - [Home](${siteUrl}) - Welcome page
 - [Blog](${siteUrl}blog/) - All published articles
-${navPages.map((page) => `- [${page.data.title}](${siteUrl}${page.id.replace(/\.mdoc$/, '')}/) - ${page.data.description}`).join('\n')}
+${navPages.map((page) => `- [${page.data.title}](${siteUrl}${page.id}/) - ${page.data.description}`).join('\n')}
 
 ## Categories
 
@@ -48,7 +46,7 @@ ${tags.map((tag) => `- [${tag.data.name}](${siteUrl}blog/tag/${tag.id}/) - ${tag
 
 ## Recent Posts
 
-${publishedPosts.map((post) => `- [${post.data.title}](${siteUrl}blog/${post.id.replace(/\.mdoc$/, '')}/) - ${post.data.description}`).join('\n')}
+${publishedPosts.map((post) => `- [${post.data.title}](${siteUrl}blog/${post.id}/) - ${post.data.description}`).join('\n')}
 
 ## Technical Details
 

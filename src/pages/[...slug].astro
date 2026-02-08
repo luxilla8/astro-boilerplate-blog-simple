@@ -2,15 +2,13 @@
 import { getCollection, render } from 'astro:content';
 import Page from '../layouts/Page.astro';
 
-export const prerender = true;
-
 export async function getStaticPaths() {
   const pages = await getCollection('pages');
 
   return pages
     .filter((page) => !page.data.draft && !page.data.isHomepage) // Exclude homepage (rendered at /)
     .map((page) => {
-      const slug = page.id.replace(/\.mdoc$/, '');
+      const slug = page.id;
       return {
         params: { slug },
         props: { page },

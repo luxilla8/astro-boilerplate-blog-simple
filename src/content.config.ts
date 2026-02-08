@@ -1,7 +1,13 @@
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
-const blogCollection = defineCollection({
-  type: 'content',
+/** Strip file extension from entry IDs so URLs stay clean (e.g. "hello-world" not "hello-world.mdoc") */
+function stripExtension({ entry }: { entry: string }) {
+  return entry.replace(/\.[^.]+$/, '');
+}
+
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.mdoc', base: './src/content/blog', generateId: stripExtension }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -15,8 +21,8 @@ const blogCollection = defineCollection({
   }),
 });
 
-const categoriesCollection = defineCollection({
-  type: 'data',
+const categories = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/categories', generateId: stripExtension }),
   schema: z.object({
     name: z.string(),
     description: z.string().optional(),
@@ -24,16 +30,16 @@ const categoriesCollection = defineCollection({
   }),
 });
 
-const tagsCollection = defineCollection({
-  type: 'data',
+const tags = defineCollection({
+  loader: glob({ pattern: '**/*.yaml', base: './src/content/tags', generateId: stripExtension }),
   schema: z.object({
     name: z.string(),
     description: z.string().optional(),
   }),
 });
 
-const pagesCollection = defineCollection({
-  type: 'content',
+const pages = defineCollection({
+  loader: glob({ pattern: '**/*.mdoc', base: './src/content/pages', generateId: stripExtension }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -46,9 +52,4 @@ const pagesCollection = defineCollection({
   }),
 });
 
-export const collections = {
-  blog: blogCollection,
-  categories: categoriesCollection,
-  tags: tagsCollection,
-  pages: pagesCollection,
-};
+export const collections = { blog, categories, tags, pages };

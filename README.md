@@ -9,8 +9,9 @@ A modern, SEO-optimized blog starter built with [Astro](https://astro.build) and
 - **AI Discoverable** - llms.txt, semantic HTML, explicit AI crawler permissions
 - **Visual CMS** - Edit content through Keystatic's intuitive interface
 - **Blog Taxonomy** - Categories and tags for organizing content
-- **Responsive Design** - Looks great on all devices
-- **Easy Deployment** - One-click deploy to Vercel, Netlify, or Cloudflare
+- **Responsive Design** - Mobile hamburger menu, looks great on all devices
+- **RSS Feed** - Auto-generated RSS 2.0 feed at `/rss.xml`
+- **Easy Deployment** - One-click deploy to Vercel
 
 ## Quick Start
 
@@ -55,41 +56,31 @@ Create new categories and tags in the Keystatic admin, then assign them to your 
 
 ### Site Information
 
-Update these files to customize your site:
+All site-wide configuration lives in a single file:
 
-1. **`astro.config.mjs`** - Set your production URL:
-   ```js
-   site: 'https://yourdomain.com',
-   ```
+**`src/config/site.ts`** — site name, description, author, social links, SEO defaults, and feature flags (newsletter, analytics, comments).
 
-2. **`src/components/Header.astro`** - Change the site name:
-   ```js
-   const siteName = 'Your Site Name';
-   ```
+Update your production URL in `astro.config.mjs`:
 
-3. **`src/components/Footer.astro`** - Update footer content
-
-4. **`src/components/BaseHead.astro`** - Customize SEO defaults
-
-5. **`keystatic.config.ts`** - Change the CMS brand name
+```js
+site: 'https://yourdomain.com',
+```
 
 ### Styling
 
-This boilerplate uses Tailwind CSS. Customize your design:
+This boilerplate uses **Tailwind CSS v4**. Design tokens are defined directly in CSS:
 
-- **`tailwind.config.mjs`** - Colors, fonts, and theme
-- **`src/styles/global.css`** - Global styles and utilities
+- **`src/styles/global.css`** — brand colors, fonts, and global styles
 
-### Colors
+#### Changing Colors
 
-The default primary color is sky blue. Change it in `tailwind.config.mjs`:
+Edit the `@theme` block in `src/styles/global.css`:
 
-```js
-colors: {
-  primary: {
-    500: '#your-brand-color',
-    // ... other shades
-  },
+```css
+@theme {
+  --color-primary-500: #your-brand-color;
+  --color-primary-600: #slightly-darker;
+  /* ... other shades */
 }
 ```
 
@@ -98,16 +89,21 @@ colors: {
 ```
 ├── src/
 │   ├── components/        # Reusable UI components
+│   ├── config/
+│   │   └── site.ts        # Site-wide configuration
 │   ├── content/
 │   │   ├── blog/          # Blog posts (Markdoc)
 │   │   ├── categories/    # Category definitions (YAML)
+│   │   ├── pages/         # Static pages (Markdoc)
 │   │   └── tags/          # Tag definitions (YAML)
+│   ├── content.config.ts  # Content collection schemas
 │   ├── layouts/           # Page layouts
 │   ├── pages/             # Route pages
 │   └── styles/            # Global styles
 ├── public/                # Static assets
 ├── keystatic.config.ts    # CMS configuration
-└── astro.config.mjs       # Astro configuration
+├── astro.config.mjs       # Astro configuration
+└── eslint.config.js       # Linting configuration
 ```
 
 ## SEO Features
@@ -120,6 +116,7 @@ Every page includes:
 - **JSON-LD** - Structured data for search engines
 - **Canonical URLs** - Prevent duplicate content
 - **Sitemap** - Auto-generated at `/sitemap-index.xml`
+- **RSS Feed** - Valid RSS 2.0 at `/rss.xml`
 
 ## AI Discovery
 
@@ -138,40 +135,29 @@ This site is optimized for AI systems:
 2. Import the repository in [Vercel](https://vercel.com)
 3. Deploy (zero configuration needed)
 
-### Netlify
-
-1. Push your code to GitHub
-2. Import in [Netlify](https://netlify.com)
-3. Build command: `npm run build`
-4. Publish directory: `dist`
-
-### Manual Build
-
-```bash
-npm run build
-npm run preview  # Test the build locally
-```
-
-The built site will be in the `dist/` folder.
+The Vercel adapter pre-renders all pages as static HTML served from the CDN edge. Only the Keystatic admin panel runs as a serverless function.
 
 ## Commands
 
 | Command           | Action                                       |
 |-------------------|----------------------------------------------|
 | `npm run dev`     | Start development server at localhost:4321   |
-| `npm run build`   | Build production site to `./dist/`           |
+| `npm run build`   | Build production site                        |
 | `npm run preview` | Preview build locally before deploying       |
+| `npm run lint`    | Run ESLint across the project                |
+| `npm run lint:fix`| Auto-fix lint issues                         |
 
 ## Tech Stack
 
-- [Astro](https://astro.build) - Static site generator
+- [Astro 5](https://astro.build) - Static site generator
 - [Keystatic](https://keystatic.com) - Git-based CMS
-- [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS
+- [Tailwind CSS 4](https://tailwindcss.com) - Utility-first CSS
 - [Markdoc](https://markdoc.dev) - Content authoring
+- [ESLint](https://eslint.org) - Code linting
 
 ## License
 
-MIT License - feel free to use this for any project.
+MIT License - see [LICENSE](./LICENSE) for details.
 
 ## Need Help?
 

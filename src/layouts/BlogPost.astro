@@ -8,6 +8,7 @@ import Prose from '../components/Prose.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import SharePost from '../components/SharePost.astro';
 import NewsletterBox from '../components/NewsletterBox.astro';
+import Icon from '../components/Icon.astro';
 import { siteConfig } from '../config/site';
 
 export interface Props {
@@ -164,9 +165,7 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
                 href="/blog"
                 class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
               >
-                <svg class="mr-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
-                </svg>
+                <Icon name="arrow-left" class="mr-2 w-5 h-5" />
                 Back to all posts
               </a>
             </div>
@@ -178,14 +177,9 @@ const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 </BaseLayout>
 
 <style>
-  /* Smooth scroll for TOC links */
-  html {
-    scroll-behavior: smooth;
-  }
-
   /* Highlight active TOC item */
   .toc a.active {
-    color: theme('colors.primary.600');
-    border-left-color: theme('colors.primary.600');
+    color: var(--color-primary-600);
+    border-left-color: var(--color-primary-600);
   }
 </style>

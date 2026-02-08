@@ -8,7 +8,7 @@ const navPages = pages
   .filter((page) => page.data.showInNav && !page.data.draft && !page.data.isHomepage)
   .sort((a, b) => (a.data.navOrder || 100) - (b.data.navOrder || 100))
   .map((page) => ({
-    href: `/${page.id.replace(/\.mdoc$/, '')}`,
+    href: `/${page.id}`,
     label: page.data.title,
   }));
 
@@ -32,7 +32,8 @@ const currentPath = Astro.url.pathname;
         <span class="hidden sm:inline">{siteConfig.name}</span>
       </a>
 
-      <ul class="flex items-center gap-1 sm:gap-2" role="list">
+      <!-- Desktop nav -->
+      <ul class="hidden md:flex items-center gap-1 sm:gap-2" role="list">
         {navLinks.map((link) => {
           const isActive = currentPath === link.href ||
             (link.href !== '/' && currentPath.startsWith(link.href));
@@ -54,6 +55,68 @@ const currentPath = Astro.url.pathname;
           );
         })}
       </ul>
+
+      <!-- Mobile menu button -->
+      <button
+        type="button"
+        class="md:hidden inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        id="mobile-menu-button"
+      >
+        <span class="sr-only">Open menu</span>
+        <!-- Hamburger icon -->
+        <svg class="h-6 w-6 block" id="menu-icon-open" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+        </svg>
+        <!-- Close icon -->
+        <svg class="h-6 w-6 hidden" id="menu-icon-close" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile menu panel -->
+    <div class="hidden md:hidden border-t border-gray-200 py-3" id="mobile-menu">
+      <ul class="space-y-1" role="list">
+        {navLinks.map((link) => {
+          const isActive = currentPath === link.href ||
+            (link.href !== '/' && currentPath.startsWith(link.href));
+          return (
+            <li>
+              <a
+                href={link.href}
+                class:list={[
+                  'block px-3 py-2 text-base font-medium rounded-lg transition-colors',
+                  isActive
+                    ? 'bg-primary-50 text-primary-700'
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100',
+                ]}
+                aria-current={currentPath === link.href ? 'page' : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   </nav>
 </header>
+
+<script>
+  const button = document.getElementById('mobile-menu-button');
+  const menu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('menu-icon-open');
+  const iconClose = document.getElementById('menu-icon-close');
+
+  button?.addEventListener('click', () => {
+    const expanded = button.getAttribute('aria-expanded') === 'true';
+    button.setAttribute('aria-expanded', String(!expanded));
+    menu?.classList.toggle('hidden');
+    iconOpen?.classList.toggle('hidden');
+    iconClose?.classList.toggle('hidden');
+    iconOpen?.classList.toggle('block');
+    iconClose?.classList.toggle('block');
+  });
+</script>

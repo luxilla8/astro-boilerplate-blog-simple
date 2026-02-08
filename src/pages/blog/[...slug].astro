@@ -2,8 +2,6 @@
 import { getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
 
-export const prerender = true;
-
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   const categories = await getCollection('categories');
@@ -13,8 +11,7 @@ export async function getStaticPaths() {
   const tagMap = new Map(tags.map((tag) => [tag.id, { slug: tag.id, ...tag.data }]));
 
   return posts.map((post) => {
-    // Remove .mdoc extension from the slug
-    const slug = post.id.replace(/\.mdoc$/, '');
+    const slug = post.id;
     return {
       params: { slug },
       props: {

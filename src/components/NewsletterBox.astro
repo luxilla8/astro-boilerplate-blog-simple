@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from '../config/site';
+import Icon from './Icon.astro';
 
 export interface Props {
   variant?: 'sidebar' | 'inline';
@@ -49,9 +50,7 @@ const { variant = 'sidebar' } = Astro.props;
       class="inline-flex items-center text-sm text-primary-600 hover:text-primary-700 font-medium"
     >
       Browse all articles
-      <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-      </svg>
+      <Icon name="arrow-right" class="ml-1 w-4 h-4" />
     </a>
   )}
   <p class="text-xs text-gray-500 mt-3">
