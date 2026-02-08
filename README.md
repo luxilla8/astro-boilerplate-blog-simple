@@ -1,6 +1,6 @@
 # Astro + Keystatic Blog Boilerplate
 
-A modern, SEO-optimized blog starter built with [Astro](https://astro.build) and [Keystatic](https://keystatic.com). Designed for maximum search engine visibility and AI discoverability.
+A modern, search engine and LLM discovery optimized blog starter built with [Astro](https://astro.build) and [Keystatic](https://keystatic.com). Designed for maximum search engine visibility and AI discoverability.
 
 ## Features
 
