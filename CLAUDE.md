@@ -12,11 +12,13 @@ sample content, and ship a new site in under an hour.
 
 ## What we're doing here (current mission)
 
-Modernizing it for 2026 and making it Claude-ready. See `PLAN.md` for the full roadmap.
-Highlights: upgrade Astro 5 → 6 (Keystatic caps us below 7) / React 19 / ESLint 10 / TS 6,
-fix template gaps (missing
-og-image, hardcoded placeholders), and harden the "use this boilerplate" workflow below.
-The build currently passes on Astro 5.16 — don't break it; upgrade incrementally.
+Modernizing for 2026. The executable plan is
+`docs/superpowers/plans/2026-09-15-modernize-2026.md` (it supersedes `PLAN.md`, now a status
+pointer). Targets: **Astro 7** (Keystatic 6 supports it), React 19, ESLint 10, Keystatic 6,
+Node 24; TypeScript stays 5.9 until `astro check` and typescript-eslint support 7. It also adds
+security headers, a smoke test and the site-standard CI gates.
+CI is red on `main` (lint error + `astro check` never wired) until the plan's Task 0 lands, so
+run that task first. Upgrade incrementally: every task ends with a green build.
 
 ## How to use this boilerplate for a new site
 
